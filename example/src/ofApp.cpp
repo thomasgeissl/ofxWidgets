@@ -4,16 +4,28 @@ void ofApp::setup(){
     _gui.setName("gui");
     auto mainLayout = ofxWidgets::layout::hBox::create();
     mainLayout->setup(_gui._width, _gui._height);
+
+    auto sideBar = ofxWidgets::widget::create();
+    sideBar->setup(mainLayout->_width/5, mainLayout->_height);
+    sideBar->_backgroundColor = ofColor::red;
+    mainLayout->add(sideBar);
+
+    auto content = ofxWidgets::widget::create();
+    content->setup(mainLayout->_width/5*4, mainLayout->_height);
+    auto contentLayout = ofxWidgets::layout::vBox::create();
+    contentLayout->setup(content);
+
+    auto topWidget = ofxWidgets::test::create();
+    topWidget->setup(contentLayout->_width, contentLayout->_height/2);
+    auto bottomWidget = ofxWidgets::test::create();
+    bottomWidget->setup(contentLayout->_width, contentLayout->_height/2);
+
+    contentLayout->add(topWidget);
+    contentLayout->add(bottomWidget);
+    content->add(contentLayout);
+
+    mainLayout->add(content);
     _gui.add(mainLayout);
-    auto leftWidget = ofxWidgets::test::create();
-    leftWidget->setup(mainLayout->_width/2, mainLayout->_height);
-    auto rightWidget = ofxWidgets::test::create();
-    rightWidget->setup(mainLayout->_width/2, mainLayout->_height);
-    mainLayout->add(leftWidget);
-    mainLayout->add(rightWidget);
-    // testWidget->setup(_gui._width, _gui._height);
-    // testWidget->setName("testWidget");
-    // _gui.add(testWidget);
 }
 
 void ofApp::update(){

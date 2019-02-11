@@ -12,6 +12,7 @@ class widget
     {
         return std::make_shared<widget>();
     }
+
     virtual void setup(float width, float height)
     {
         _needsToBeRedrawn = true;
@@ -23,6 +24,18 @@ class widget
         _fbo.end();
         _position = glm::vec2(0, 0);
     }
+
+    virtual void setup(pointer other){
+        _needsToBeRedrawn = true;
+        _width = other->_width;
+        _height = other->_height;
+        _fbo.allocate(_width, _height, GL_RGBA);
+        _fbo.begin();
+        ofClear(255, 0);
+        _fbo.end();
+        _position = glm::vec2(0, 0);
+    }
+
     void setName(std::string name)
     {
         _name = name;
