@@ -1,25 +1,19 @@
 #include "ofApp.h"
 
 void ofApp::setup(){
-    // _gui = ofxWidgets::widget::create();
-    // _gui->setup(ofGetWidth(), ofGetHeight());
-    // _gui->setName("gui");
-    // auto layout = ofxWidgets::layout::hBox::create();
-    // layout->setup(_gui->_width-100, _gui->_height);
-    // layout->setName("layout");
-    // auto leftWidget = ofxWidgets::widget::create();
-    // leftWidget->setup(ofGetWidth()/2, ofGetHeight());
-    // leftWidget->setName("left");
-    // auto rightWidget = ofxWidgets::widget::create();
-    // rightWidget->setName("right");
-    // rightWidget->setup(ofGetWidth()/2, ofGetHeight());
-    // layout->add(leftWidget);
-    // _gui->add(layout);
     _gui.setName("gui");
-    auto testWidget = ofxWidgets::test::create();
-    testWidget->setup(_gui._width, _gui._height);
-    testWidget->setName("testWidget");
-    _gui.add(testWidget);
+    auto mainLayout = ofxWidgets::layout::hBox::create();
+    mainLayout->setup(_gui._width, _gui._height);
+    _gui.add(mainLayout);
+    auto leftWidget = ofxWidgets::test::create();
+    leftWidget->setup(mainLayout->_width/2, mainLayout->_height);
+    auto rightWidget = ofxWidgets::test::create();
+    rightWidget->setup(mainLayout->_width/2, mainLayout->_height);
+    mainLayout->add(leftWidget);
+    mainLayout->add(rightWidget);
+    // testWidget->setup(_gui._width, _gui._height);
+    // testWidget->setName("testWidget");
+    // _gui.add(testWidget);
 }
 
 void ofApp::update(){

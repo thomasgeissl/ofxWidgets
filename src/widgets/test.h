@@ -21,7 +21,7 @@ class test : public widget
         _fbo.begin();
         ofClear(255,0);
         ofSetColor(ofColor::purple);
-        ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimeMillis())*20, _height/2 + std::cos(ofGetElapsedTimeMillis())*20, 100);
+        ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*20, _height/2 + std::cos(ofGetElapsedTimef())*20, 100);
         _fbo.end();
         setNeedsToBeRedrawn();
     }

@@ -22,8 +22,6 @@ class widget
         ofClear(255, 0);
         _fbo.end();
         _position = glm::vec2(0, 0);
-
-        _backgroundColor = ofColor::red;
     }
     void setName(std::string name)
     {

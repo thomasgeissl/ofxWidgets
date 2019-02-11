@@ -15,7 +15,7 @@ class gui : public widget
     }
     gui(bool registerEventListeners = true, bool registerDrawEventListener = true){
         if(registerEventListeners){
-            ofAddListener(ofEvents().setup, this, &gui::onSetup);
+            ofAddListener(ofEvents().setup, this, &gui::onSetup, OF_EVENT_ORDER_BEFORE_APP);
             ofAddListener(ofEvents().update, this, &gui::onUpdate);
             ofAddListener(ofEvents().keyPressed, this, &gui::onKeyPressed);
             ofAddListener(ofEvents().keyReleased, this, &gui::onKeyReleased);
