@@ -93,39 +93,59 @@ class widget
         setNeedsToBeRedrawn(false);
     }
     virtual void keyPressed(int key) {
-        // get focussed widget and 
-        // w->keyPressed(key);
+        auto w = getFocussedWidget();
+        if(w != nullptr){
+            w->keyPressed(key);
+        }
     }
     virtual void keyReleased(int key) {
-        // get focussed widget and 
-        // w->keyPressed(key);
+        auto w = getFocussedWidget();
+        if(w != nullptr){
+            w->keyReleased(key);
+        }
     }
     virtual void mouseMoved(int x, int y) {
-        // get widget under mouse pointer
-        // w->mouseMoved(x, y);
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->mouseMoved(x, y);
+        }
     }
     virtual void mouseDragged(int x, int y, int button) {
-        // get widget under mouse pointer
-        // w->mouseDragged(x, y, button);
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->mouseDragged(x, y, button);
+        }
     }
     virtual void mousePressed(int x, int y, int button) {
-        // get widget under mouse pointer
-        // w->mousePressed(x, y, button);
+        auto focussedWidget = getFocussedWidget();
+        if(focussedWidget != nullptr){
+            focussedWidget->_focussed = false;
+        }
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->_focussed = true;
+            w->mousePressed(x, y, button);
+        }
     }
     virtual void mouseReleased(int x, int y, int button) {
-        // get widget under mouse pointer
-        // w->mouseReleased(x, y, button);
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->mouseReleased(x, y, button);
+        }
     }
     virtual void mouseEntered(int x, int y) {
-        // get widget under mouse pointer
-        // w->mouseEntered(x, y);
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->mouseEntered(x, y);
+        }
     }
     virtual void mouseExited(int x, int y) {
-        // get widget under mouse pointer
-        // w->mouseExited(x, y);
+        auto w = getWidgetAtPosition(x, y);
+        if(w != nullptr){
+            w->mouseExited(x, y);
+        }
     }
     virtual void resized(int w, int h) {
-
     }
 
     virtual void add(pointer w)
@@ -137,6 +157,26 @@ class widget
         _needsToBeRedrawn = value;
     }
 
+    pointer getWidgetAtPosition(float x, float y){
+        pointer w = nullptr;
+        for(auto & child : _children){
+            if((x > child->_position.x && x < child->_position.x + child->_width) &&
+            (y > child->_position.y && y < child->_position.y + child->_height)){
+                w = child;
+            }
+        }
+        return w;
+    }
+    pointer getFocussedWidget(){
+        pointer w = nullptr;
+        for(auto & child : _children){
+            if(child->_focussed){
+                w = child;
+            }
+        }
+        return w;
+    }
+
     bool _needsToBeRedrawn;
     ofFbo _fbo;
     glm::vec2 _position;
@@ -145,8 +185,11 @@ class widget
     std::string _name;
     float _width;
     float _height;
+    bool _focussed;
 
     // style
     ofColor _backgroundColor;
+    ofColor _borderColor;
+    int _borderWidth;
 };
 }; // namespace ofxWidgets
