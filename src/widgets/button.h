@@ -22,7 +22,7 @@ class button : public ofxWidgets::widget
     }
     button(ofParameter<void> parameter) : _trigger(parameter)
     {
-        button();
+        _color = ofColor::lightGrey;
     }
 
     virtual void update()
@@ -32,7 +32,6 @@ class button : public ofxWidgets::widget
         {
             begin();
             ofSetColor(_color);
-            ofSetColor(ofColor::green);
             ofDrawRectangle(0, 0, _width, _height);
             end();
         }
@@ -49,28 +48,6 @@ class button : public ofxWidgets::widget
         // TODO: unhighlight
     }
 
-    void setText(std::string text)
-    {
-        _text = text;
-        setNeedsToBeRedrawn(true);
-    }
-    void setFontSize(int fontSize)
-    {
-        _fontSize = fontSize;
-    }
-    void onTextChange(std::string &value)
-    {
-        setNeedsToBeRedrawn(true);
-    }
-    void onFontSizeChange(int &value)
-    {
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
-        setNeedsToBeRedrawn(true);
-    }
-
-    ofTrueTypeFont _ttf;
-    ofParameter<std::string> _text;
-    ofParameter<int> _fontSize;
     ofParameter<void> _trigger;
 };
 }; // namespace ofxWidgets

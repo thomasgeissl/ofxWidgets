@@ -19,27 +19,30 @@ class toggle : public ofxWidgets::widget
     toggle() : widget()
     {
         _value.addListener(this, &toggle::onValueChange);
+        _color = ofColor::darkGrey;
+        _inactiveColor = ofColor::lightGrey;
     }
     toggle(ofParameter<bool> parameter) : _value(parameter)
     {
         _value.addListener(this, &toggle::onValueChange);
+        _color = ofColor::darkGrey;
+        _inactiveColor = ofColor::lightGrey;
     }
 
     virtual void update()
     {
         widget::update();
-        // _needsToBeRedrawn = true;
         if (_needsToBeRedrawn)
         {
             begin();
             if (_value)
             {
-                ofSetColor(ofColor::green);
+                ofSetColor(_color);
                 ofDrawRectangle(0, 0, _width, _height);
             }
             else
             {
-                ofSetColor(ofColor::red);
+                ofSetColor(_inactiveColor);
                 ofDrawRectangle(0, 0, _width, _height);
             }
             end();
@@ -57,28 +60,12 @@ class toggle : public ofxWidgets::widget
         // TODO: unhighlight
     }
 
-    void setText(std::string text)
-    {
-        _text = text;
-        setNeedsToBeRedrawn(true);
-    }
-    void setFontSize(int fontSize)
-    {
-        _fontSize = fontSize;
-    }
     void onValueChange(bool &value)
     {
         setNeedsToBeRedrawn(true);
     }
-    void onFontSizeChange(int &value)
-    {
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
-        setNeedsToBeRedrawn(true);
-    }
 
-    ofTrueTypeFont _ttf;
-    ofParameter<std::string> _text;
-    ofParameter<int> _fontSize;
     ofParameter<bool> _value;
+    ofParameter<ofColor> _inactiveColor;
 };
 }; // namespace ofxWidgets

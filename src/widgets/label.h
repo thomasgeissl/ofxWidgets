@@ -19,13 +19,12 @@ class label : public ofxWidgets::widget
     label() : widget()
     {
         _fontSize = 32;
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         _text.addListener(this, &label::onTextChange);
-        _fontSize.addListener(this, &label::onFontSizeChange);
     }
-    label(ofParameter<std::string> parameter) : _text(parameter)
+    label(ofParameter<std::string> parameter) : _text(parameter), widget()
     {
-        label();
+        _fontSize = 32;
+        _text.addListener(this, &label::onTextChange);
     }
 
     virtual void update()
@@ -45,22 +44,11 @@ class label : public ofxWidgets::widget
         _text = text;
         setNeedsToBeRedrawn(true);
     }
-    void setFontSize(int fontSize)
-    {
-        _fontSize = fontSize;
-    }
     void onTextChange(std::string &value)
     {
         setNeedsToBeRedrawn(true);
     }
-    void onFontSizeChange(int &value)
-    {
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
-        setNeedsToBeRedrawn(true);
-    }
 
-    ofTrueTypeFont _ttf;
     ofParameter<std::string> _text;
-    ofParameter<int> _fontSize;
 };
 }; // namespace ofxWidgets

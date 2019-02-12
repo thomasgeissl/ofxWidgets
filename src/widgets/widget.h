@@ -17,6 +17,12 @@ class widget
         _color.addListener(this, &widget::onColorChange);
         _backgroundColor.addListener(this, &widget::onColorChange);
         _borderColor.addListener(this, &widget::onColorChange);
+        _fontSize.addListener(this, &widget::onFontSizeChange);
+
+
+        _fontSize = 32;
+        _focussed = false;
+        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
     }
 
     virtual void setup(float width, float height)
@@ -93,8 +99,12 @@ class widget
                 //remove child
             }
         }
+        updateOverlay();
         end();
         setNeedsToBeRedrawn();
+    }
+    virtual void updateOverlay()
+    {
     }
     void draw()
     {
@@ -192,6 +202,10 @@ class widget
         _children.push_back(std::move(w));
     }
 
+    void setFontSize(int fontSize)
+    {
+        _fontSize = fontSize;
+    }
     void setNeedsToBeRedrawn(bool value = true)
     {
         _needsToBeRedrawn = value;
@@ -255,6 +269,12 @@ class widget
     {
         setNeedsToBeRedrawn(true);
     }
+    void onFontSizeChange(int &value)
+    {
+        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
+        setNeedsToBeRedrawn(true);
+    }
+
 
     bool _needsToBeRedrawn;
     ofFbo _fbo;
@@ -266,11 +286,16 @@ class widget
     float _height;
     bool _focussed;
 
+    ofTrueTypeFont _ttf;
+
     // style
     ofParameterGroup _parameters;
     ofParameter<ofColor> _color;
     ofParameter<ofColor> _backgroundColor;
     ofParameter<ofColor> _borderColor;
+    ofParameter<int> _fontSize;
+    // alignment (left, center, right)
+    // verticalAlignment (top, center, bottom)
 
     int _borderWidth;
 };
