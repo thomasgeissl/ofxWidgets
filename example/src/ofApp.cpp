@@ -67,6 +67,18 @@ void ofApp::setup(){
     contentLayout->add(_lowerCircle);
     contentLayout->add(button);
     contentLayout->add(toggle);
+
+    _intValue.set("int", 20, 0, 100);
+    _floatValue.set("float", 0.5, 0, 1);
+
+    auto intSlider = ofxWidgets::intSlider::create(_intValue);
+    intSlider->setup(sideBarLayout->_width, 50);
+    auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
+    floatSlider->setup(sideBarLayout->_width, 50);
+
+    contentLayout->add(intSlider);
+    contentLayout->add(floatSlider);
+
     content->add(contentLayout);
 
     mainLayout->add(content);

@@ -26,6 +26,9 @@ class ofApp : public ofBaseApp{
     ofParameter<float> _value;
     ofParameter<void> _trigger;
 
+    ofParameter<int> _intValue;
+    ofParameter<float> _floatValue;
+
 
     void onTrigger();
 };
