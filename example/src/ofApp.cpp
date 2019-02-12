@@ -31,6 +31,11 @@ void ofApp::setup(){
     slider->setup(sideBarLayout->_width, 50);
     sideBarLayout->add(slider);
 
+    _trigger.set("trigger");
+    auto button = ofxWidgets::button::create(_trigger);
+    button->setup(sideBarLayout->_width, 50);
+    sideBarLayout->add(button);
+
     sideBar->add(sideBarLayout);
     mainLayout->add(sideBar);
 

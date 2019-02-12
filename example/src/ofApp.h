@@ -21,4 +21,5 @@ class ofApp : public ofBaseApp{
 
     ofxWidgets::gui _gui;
     ofParameter<float> _value;
+    ofParameter<void> _trigger;
 };

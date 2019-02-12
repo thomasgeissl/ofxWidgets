@@ -6,6 +6,7 @@
 #include "./widgets/widget.h"
 #include "./widgets/label.h"
 #include "./widgets/slider.h"
+#include "./widgets/button.h"
 #include "./widgets/test.h"
 
 namespace ofxYaga = ofxWidgets;

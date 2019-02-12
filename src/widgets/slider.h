@@ -42,7 +42,7 @@ class slider : public ofxWidgets::widget
     }
     // TODO: arrow keys, number input
     virtual void mouseDragged(int x, int y, int button) {
-        widget::mouseDragged(x, y, z);
+        widget::mouseDragged(x, y, button);
         // TODO: calculate position and value
     }
 
