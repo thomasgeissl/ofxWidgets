@@ -119,11 +119,11 @@ class widget
     virtual void mousePressed(int x, int y, int button) {
         auto focussedWidget = getFocussedWidget();
         if(focussedWidget != nullptr){
-            focussedWidget->_focussed = false;
+            focussedWidget->setFocus(false);
         }
         auto w = getWidgetAtPosition(x, y);
         if(w != nullptr){
-            w->_focussed = true;
+            w->setFocus(true);
             w->mousePressed(x, y, button);
         }
     }
@@ -175,6 +175,15 @@ class widget
             }
         }
         return w;
+    }
+
+    void setFocus(bool value = true){
+        _focussed = value;
+        if(!value){
+            for(auto & child : _children){
+                child->setFocus(value);
+            }
+        }
     }
 
     bool _needsToBeRedrawn;

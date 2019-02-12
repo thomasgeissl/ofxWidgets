@@ -22,6 +22,11 @@ class test : public widget
         ofClear(255,0);
         ofSetColor(ofColor::purple);
         ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*20, _height/2 + std::cos(ofGetElapsedTimef())*20, 100);
+
+        if(_focussed){
+            ofSetColor(ofColor::red);
+            ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*20, _height/2 + std::cos(ofGetElapsedTimef())*20, 10);
+        }
         _fbo.end();
         setNeedsToBeRedrawn();
     }
