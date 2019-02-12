@@ -16,21 +16,23 @@ class label : public ofxWidgets::widget
     {
         return std::make_shared<label>(parameter);
     }
-    label() : widget() {
+    label() : widget()
+    {
         _fontSize = 32;
         _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         _text.addListener(this, &label::onTextChange);
         _fontSize.addListener(this, &label::onFontSizeChange);
     }
-    label(ofParameter<std::string> parameter) : _text(parameter){
+    label(ofParameter<std::string> parameter) : _text(parameter)
+    {
         label();
     }
-
 
     virtual void update()
     {
         widget::update();
-        if(_needsToBeRedrawn){
+        if (_needsToBeRedrawn)
+        {
             begin();
             ofFill();
             ofSetColor(_color);
@@ -38,17 +40,21 @@ class label : public ofxWidgets::widget
             end();
         }
     }
-    void setText(std::string text){
+    void setText(std::string text)
+    {
         _text = text;
         setNeedsToBeRedrawn(true);
     }
-    void setFontSize(int fontSize){
+    void setFontSize(int fontSize)
+    {
         _fontSize = fontSize;
     }
-    void onTextChange(std::string & value){
+    void onTextChange(std::string &value)
+    {
         setNeedsToBeRedrawn(true);
     }
-    void onFontSizeChange(int & value){
+    void onFontSizeChange(int &value)
+    {
         _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         setNeedsToBeRedrawn(true);
     }

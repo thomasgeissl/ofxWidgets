@@ -143,7 +143,6 @@ class widget
         auto w = getWidgetAtPosition(x, y);
         if (w != nullptr)
         {
-            ofLogNotice() << "widget::mousePressed " << _name;
             w->setFocus(true);
             w->mousePressed(x - w->_position.x, y - w->_position.y, button);
         }

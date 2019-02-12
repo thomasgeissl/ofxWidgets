@@ -17,7 +17,8 @@ class hBox : public ofxWidgets::widget
     }
     virtual void add(ofxWidgets::widget::pointer w)
     {
-        if(_children.size() > 0){
+        if (_children.size() > 0)
+        {
             auto pos = _children.back()->_position;
             auto width = _children.back()->_width;
             w->_position = pos + glm::vec2(width, 0);

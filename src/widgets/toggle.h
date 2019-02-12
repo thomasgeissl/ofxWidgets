@@ -16,51 +16,62 @@ class toggle : public ofxWidgets::widget
     {
         return std::make_shared<toggle>(parameter);
     }
-    toggle() : widget() {
+    toggle() : widget()
+    {
         _value.addListener(this, &toggle::onValueChange);
     }
-    toggle(ofParameter<bool> parameter) : _value(parameter){
+    toggle(ofParameter<bool> parameter) : _value(parameter)
+    {
         _value.addListener(this, &toggle::onValueChange);
     }
-
 
     virtual void update()
     {
         widget::update();
         // _needsToBeRedrawn = true;
-        if(_needsToBeRedrawn){
+        if (_needsToBeRedrawn)
+        {
             begin();
-            if(_value){
+            if (_value)
+            {
                 ofSetColor(ofColor::green);
-                ofDrawRectangle(0,0, _width, _height);
-            }else{
+                ofDrawRectangle(0, 0, _width, _height);
+            }
+            else
+            {
                 ofSetColor(ofColor::red);
-                ofDrawRectangle(0,0, _width, _height);
+                ofDrawRectangle(0, 0, _width, _height);
             }
             end();
         }
     }
-    virtual void mousePressed(int x, int y, int button) {
+    virtual void mousePressed(int x, int y, int button)
+    {
         widget::mousePressed(x, y, button);
         _value = !_value;
         // TODO: highlight
     }
-    virtual void mouseReleased(int x, int y, int button) {
+    virtual void mouseReleased(int x, int y, int button)
+    {
         widget::mouseReleased(x, y, button);
         // TODO: unhighlight
     }
 
-    void setText(std::string text){
+    void setText(std::string text)
+    {
         _text = text;
         setNeedsToBeRedrawn(true);
     }
-    void setFontSize(int fontSize){
+    void setFontSize(int fontSize)
+    {
         _fontSize = fontSize;
     }
-    void onValueChange(bool & value){
+    void onValueChange(bool &value)
+    {
         setNeedsToBeRedrawn(true);
     }
-    void onFontSizeChange(int & value){
+    void onFontSizeChange(int &value)
+    {
         _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         setNeedsToBeRedrawn(true);
     }

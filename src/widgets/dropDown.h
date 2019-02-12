@@ -13,22 +13,24 @@ class dropDown : public ofxWidgets::widget
     {
         return std::make_shared<dropDown>();
     }
-    static pointer create(ofParameter<T> value, std::vector<T> options)
+    static pointer create(ofParameter<T> value, std::vector<std::pair<T, std::string>> options)
     {
         return std::make_shared<dropDown>(value, options);
     }
-    dropDown() : widget() {
+    dropDown() : widget()
+    {
     }
 
-    dropDown(ofParameter<T> value, std::vector<T> options) : widget(), _value(value), _options(options){
+    dropDown(ofParameter<T> value, std::vector<std::pair<T, std::string>> options) : widget(), _value(value), _options(options)
+    {
     }
-
 
     virtual void update()
     {
         _needsToBeRedrawn = true;
         widget::update();
-        if(_needsToBeRedrawn){
+        if (_needsToBeRedrawn)
+        {
             begin();
             ofFill();
             end();
@@ -36,20 +38,23 @@ class dropDown : public ofxWidgets::widget
         // TODO: draw overlay
     }
 
-    void setFontSize(int fontSize){
+    void setFontSize(int fontSize)
+    {
         _fontSize = fontSize;
     }
-    void onValueChange(T & value){
+    void onValueChange(T &value)
+    {
         setNeedsToBeRedrawn(true);
     }
-    void onFontSizeChange(int & value){
+    void onFontSizeChange(int &value)
+    {
         _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         setNeedsToBeRedrawn(true);
     }
 
     ofTrueTypeFont _ttf;
     ofParameter<T> _value;
-    std::vector<T> _options;
+    std::vector<std::pair<T, std::string>> _options;
     ofParameter<int> _fontSize;
 };
 typedef dropDown<int> intDropDown;

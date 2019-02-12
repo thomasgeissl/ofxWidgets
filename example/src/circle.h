@@ -11,7 +11,8 @@ class circle : public ofxWidgets::widget
     {
         return std::make_shared<circle>();
     }
-    circle(){
+    circle()
+    {
         _color = ofColor::purple;
         _boost.set("boost", false);
     }
@@ -21,17 +22,21 @@ class circle : public ofxWidgets::widget
         widget::update();
 
         _fbo.begin();
-        ofClear(255,0);
+        ofClear(255, 0);
         ofSetColor(_color);
-        if(_boost){
-            ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*100, _height/2 + std::cos(ofGetElapsedTimef())*100, 100);
-        }else{
-            ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*20, _height/2 + std::cos(ofGetElapsedTimef())*20, 100);
+        if (_boost)
+        {
+            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef()) * 100, _height / 2 + std::cos(ofGetElapsedTimef()) * 100, 50);
+        }
+        else
+        {
+            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef()) * 20, _height / 2 + std::cos(ofGetElapsedTimef()) * 20, 50);
         }
 
-        if(_focussed){
+        if (_focussed)
+        {
             ofSetColor(ofColor::red);
-            ofDrawCircle(_width/2 + std::sin(ofGetElapsedTimef())*20, _height/2 + std::cos(ofGetElapsedTimef())*20, 10);
+            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef()) * 20, _height / 2 + std::cos(ofGetElapsedTimef()) * 20, 10);
         }
         _fbo.end();
         setNeedsToBeRedrawn();
