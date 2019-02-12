@@ -87,7 +87,7 @@ class slider : public ofxWidgets::widget
     virtual void mouseDragged(int x, int y, int button)
     {
         widget::mouseDragged(x, y, button);
-        if (button == 0)
+        if (button == 0 && _focussed)
         {
             if (_style == style::horizontal)
             {

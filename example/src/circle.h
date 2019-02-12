@@ -26,7 +26,7 @@ class circle : public ofxWidgets::widget
         ofSetColor(_color);
         if (_boost)
         {
-            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef()) * 100, _height / 2 + std::cos(ofGetElapsedTimef()) * 100, 50);
+            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef() * 100) * 20, _height / 2 + std::cos(ofGetElapsedTimef() * 100) * 20, 50);
         }
         else
         {

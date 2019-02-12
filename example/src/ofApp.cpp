@@ -39,9 +39,9 @@ void ofApp::setup()
     contentLayout->setName("contentLayout");
 
     _upperCircle = circle::create();
-    _upperCircle->setup(contentLayout->_width, contentLayout->_height / 3);
+    _upperCircle->setup(contentLayout->_width, contentLayout->_height / 5);
     _lowerCircle = circle::create();
-    _lowerCircle->setup(contentLayout->_width, contentLayout->_height / 3);
+    _lowerCircle->setup(contentLayout->_width, contentLayout->_height / 5);
 
     _value.set("value", 0.5, 0, 1);
     auto slider = ofxWidgets::floatSlider::create(_value);
