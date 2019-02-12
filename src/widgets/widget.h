@@ -12,6 +12,11 @@ class widget
     {
         return std::make_shared<widget>();
     }
+    widget(){
+        _color.addListener(this, &widget::onColorChange);
+        _backgroundColor.addListener(this, &widget::onColorChange);
+        _borderColor.addListener(this, &widget::onColorChange);
+    }
 
     virtual void setup(float width, float height)
     {
@@ -56,23 +61,23 @@ class widget
         }
 
         // check if needs to be redrawn
-        // auto needsToBeRedrawn = false;
-        // for (auto & child : _children)
-        // {
-        //     if(child->_needsToBeRedrawn){
-        //         needsToBeRedrawn = true;
-        //     }
-        // }
-        // if(!needsToBeRedrawn){
-        //     return;
-        // }
+        auto needsToBeRedrawn = false;
+        for (auto & child : _children)
+        {
+            if(child->_needsToBeRedrawn){
+                needsToBeRedrawn = true;
+            }
+        }
+        if(!_needsToBeRedrawn && !needsToBeRedrawn){
+            return;
+        }
 
-        _fbo.begin();
-        ofClear(255, 0);
+        begin();
         // draw the background
         ofSetColor(_backgroundColor);
         ofDrawRectangle(0, 0, _width, _height);
 
+        // draw each child
         for (auto & child : _children)
         {
             if (child != nullptr)
@@ -84,7 +89,7 @@ class widget
                 //remove child
             }
         }
-        _fbo.end();
+        end();
         setNeedsToBeRedrawn();
     }
     void draw()
@@ -157,6 +162,18 @@ class widget
         _needsToBeRedrawn = value;
     }
 
+    void begin(bool clear = true){
+        ofPushMatrix();
+        _fbo.begin();
+        if(clear){
+            ofClear(255, 0);
+        }
+    }
+    void end(){
+        _fbo.end();
+        ofPopMatrix();
+    }
+
     pointer getWidgetAtPosition(float x, float y){
         pointer w = nullptr;
         for(auto & child : _children){
@@ -186,6 +203,11 @@ class widget
         }
     }
 
+    // listeners
+    void onColorChange(ofColor & color){
+        setNeedsToBeRedrawn(true);
+    }
+
     bool _needsToBeRedrawn;
     ofFbo _fbo;
     glm::vec2 _position;
@@ -197,8 +219,11 @@ class widget
     bool _focussed;
 
     // style
-    ofColor _backgroundColor;
-    ofColor _borderColor;
+    ofParameterGroup _parameters;
+    ofParameter<ofColor> _color;
+    ofParameter<ofColor> _backgroundColor;
+    ofParameter<ofColor> _borderColor;
+
     int _borderWidth;
 };
 }; // namespace ofxWidgets

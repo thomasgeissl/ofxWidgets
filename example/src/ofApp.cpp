@@ -7,7 +7,17 @@ void ofApp::setup(){
 
     auto sideBar = ofxWidgets::widget::create();
     sideBar->setup(mainLayout->_width/5, mainLayout->_height);
-    sideBar->_backgroundColor = ofColor::red;
+    sideBar->_backgroundColor = ofColor(16, 16, 16);
+    
+    auto sideBarLayout = ofxWidgets::layout::vBox::create();
+    sideBarLayout->setup(sideBar);
+
+    auto sideBarHeading = ofxWidgets::label::create();
+    sideBarHeading->setup(sideBarLayout->_width, 50);
+    sideBarHeading->setText("Sidebar");
+    sideBarHeading->_color = ofColor::white;
+    sideBarLayout->add(sideBarHeading);
+    sideBar->add(sideBarLayout);
     mainLayout->add(sideBar);
 
     auto content = ofxWidgets::widget::create();
@@ -29,6 +39,7 @@ void ofApp::setup(){
 }
 
 void ofApp::update(){
+    ofSetWindowTitle(ofToString((int)(ofGetFrameRate())));
 }
 
 void ofApp::draw(){

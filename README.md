@@ -1,4 +1,6 @@
 # ofxWidgets (aka ofxYaga - yet another gui addon)
+## Description
+Widget based gui addon. Each widget draws into its own FBO and only gets redrawn if flagged as dirty.
 
 ## License
 This project is released under MIT license, please note that dependencies might be released differently.
