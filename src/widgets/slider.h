@@ -35,8 +35,8 @@ class slider : public ofxWidgets::widget
             begin();
             ofFill();
             ofSetColor(ofColor::green);
-            // ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _width), _height);
-            ofDrawRectangle(0, 0, 100, _height);
+            ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _width), _height);
+            // ofDrawRectangle(0, 0, 100, _height);
             end();
         }
     }
