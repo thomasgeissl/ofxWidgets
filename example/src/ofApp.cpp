@@ -75,6 +75,7 @@ void ofApp::setup(){
     intSlider->setup(sideBarLayout->_width, 50);
     auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
     floatSlider->setup(sideBarLayout->_width, 50);
+    floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
 
     contentLayout->add(intSlider);
     contentLayout->add(floatSlider);

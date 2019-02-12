@@ -4,10 +4,12 @@
 
 namespace ofxWidgets
 {
+
 template <class T>
 class slider : public ofxWidgets::widget
 {
   public:
+    enum style { horizontal, vertical, rotary };
     typedef std::shared_ptr<slider> pointer;
     static pointer create()
     {
@@ -20,10 +22,12 @@ class slider : public ofxWidgets::widget
     slider() : widget() {
         _value.set("value", 0, 0, 100);
         _value.addListener(this, &slider::onValueChange);
+        _style = style::horizontal;
     }
 
     slider(ofParameter<T> parameter) : widget(), _value(parameter){
         _value.addListener(this, &slider::onValueChange);
+        _style = style::horizontal;
     }
 
 
@@ -35,19 +39,47 @@ class slider : public ofxWidgets::widget
             begin();
             ofFill();
             ofSetColor(ofColor::green);
-            ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _width), _height);
-            // ofDrawRectangle(0, 0, 100, _height);
+            if(_style == style::horizontal){
+                ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _width), _height);
+            }else if(_style == style::vertical){
+                auto height = ofMap(_value, _value.getMin(), _value.getMax(), 0, _height);
+                ofDrawRectangle(0, _height - height, _width, height);
+            }else if(_style == style::rotary){
+                // TODO
+            }
             end();
         }
     }
     // TODO: arrow keys, number input
+    virtual void mousePressed(int x, int y, int button) {
+        widget::mousePressed(x, y, button);
+        if(button == 0){
+            if(_style == style::horizontal){
+                _value = ofMap(x, 0, _width, _value.getMin(), _value.getMax());
+            }else if(_style == style::vertical){
+                _value = ofMap(_height - y, 0, _height, _value.getMin(), _value.getMax());
+            }else if(_style == style::rotary){
+                // TODO
+            }
+        }
+    }
     virtual void mouseDragged(int x, int y, int button) {
         widget::mouseDragged(x, y, button);
-        // TODO: calculate position and value
+        if(button == 0){
+            if(_style == style::horizontal){
+                _value = ofMap(x, 0, _width, _value.getMin(), _value.getMax());
+            }else if(_style == style::vertical){
+                _value = ofMap(_height - y, 0, _height, _value.getMin(), _value.getMax());
+            }else if(_style == style::rotary){
+                // TODO
+            }
+        }
     }
 
-    // TODO: horizontal, vertical, rotary
-    // void setStyle(){}
+    void setStyle(style s){
+        _style = s;
+        setNeedsToBeRedrawn(true);
+    }
     void setFontSize(int fontSize){
         _fontSize = fontSize;
     }
@@ -62,6 +94,7 @@ class slider : public ofxWidgets::widget
     ofTrueTypeFont _ttf;
     ofParameter<T> _value;
     ofParameter<int> _fontSize;
+    style _style;
 };
 typedef slider<int> intSlider;
 typedef slider<float> floatSlider;
