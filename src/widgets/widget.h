@@ -151,6 +151,17 @@ class widget
         }
     }
     virtual void resized(int w, int h) {
+        float xFactor = w/_width;
+        float yFactor = h/_height;
+        _width = w;
+        _height = h;
+        _fbo.allocate(_width, _height, GL_RGBA);
+        setNeedsToBeRedrawn(true);
+
+        for(auto & child : _children){
+            child->resized(child->_width * xFactor, child->_height * yFactor);
+            child->_position *= glm::vec2(xFactor, yFactor); 
+        }
     }
 
     virtual void add(pointer w)
