@@ -20,13 +20,14 @@ class toggle : public ofxWidgets::widget
         _value.addListener(this, &toggle::onValueChange);
     }
     toggle(ofParameter<bool> parameter) : _value(parameter){
-        toggle();
+        _value.addListener(this, &toggle::onValueChange);
     }
 
 
     virtual void update()
     {
         widget::update();
+        // _needsToBeRedrawn = true;
         if(_needsToBeRedrawn){
             begin();
             if(_value){
