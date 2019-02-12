@@ -35,7 +35,7 @@ class label : public ofxWidgets::widget
             ofFill();
             ofSetColor(_color);
             _ttf.drawString(_text, 0, 36);
-            _fbo.end();
+            end();
         }
     }
     void setText(std::string text){
