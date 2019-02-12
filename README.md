@@ -1,6 +1,36 @@
 # ofxWidgets (aka ofxYaga - yet another gui addon)
 ## Description
+It seems like every oF developer has written a gui addon, this is mine. This is more of an experiment than anything serious, not sure how much time i will have in the future to develop this addon. 
+Contributions are very welcome.
+
 Widget based gui addon. Each widget draws into its own FBO and only gets redrawn if flagged as dirty.
+
+Current state: mostly broken
+
+The addon includes the following widgets:
+* gui - container for all other widgets, registers automatically to ofEvents
+* widget - base widget
+* label
+* slider
+    * int
+    * float
+    * double
+* button
+* toggle
+* dropDown
+    * int
+    * float
+    * double
+    * string
+
+These widgets hold internaly ofParameter objects. You can pass in your own parameters.
+
+In order to layout your gui, you can use one of the following layouts:
+* boxLayout
+    * hBox
+    * vBox
+* tabLayout
+* gridLayout
 
 ## License
 This project is released under MIT license, please note that dependencies might be released differently.
