@@ -20,4 +20,5 @@ class ofApp : public ofBaseApp{
     void gotMessage(ofMessage msg);
 
     ofxWidgets::gui _gui;
+    ofParameter<float> _value;
 };

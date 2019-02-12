@@ -16,7 +16,21 @@ void ofApp::setup(){
     sideBarHeading->setup(sideBarLayout->_width, 50);
     sideBarHeading->setText("Sidebar");
     sideBarHeading->_color = ofColor::white;
+    sideBarHeading->_backgroundColor = ofColor::green;
     sideBarLayout->add(sideBarHeading);
+    
+    auto sideBarSubHeading = ofxWidgets::label::create();
+    sideBarSubHeading->setup(sideBarLayout->_width, 50);
+    sideBarSubHeading->setText("Settings");
+    sideBarSubHeading->_color = ofColor::white;
+    sideBarSubHeading->setFontSize(16);
+    sideBarLayout->add(sideBarSubHeading);
+    
+    _value.set("value", 0.5, 0, 1);
+    auto slider = ofxWidgets::floatSlider::create(_value);
+    slider->setup(sideBarLayout->_width, 50);
+    sideBarLayout->add(slider);
+
     sideBar->add(sideBarLayout);
     mainLayout->add(sideBar);
 

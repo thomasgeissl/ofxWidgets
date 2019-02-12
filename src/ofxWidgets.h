@@ -5,6 +5,7 @@
 #include "./layouts/vBox.h"
 #include "./widgets/widget.h"
 #include "./widgets/label.h"
+#include "./widgets/slider.h"
 #include "./widgets/test.h"
 
 namespace ofxYaga = ofxWidgets;
