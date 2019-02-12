@@ -7,10 +7,12 @@ void ofApp::setup(){
 
     auto sideBar = ofxWidgets::widget::create();
     sideBar->setup(mainLayout->_width/5, mainLayout->_height);
+    sideBar->setName("sideBar");
     sideBar->_backgroundColor = ofColor(16, 16, 16);
     
     auto sideBarLayout = ofxWidgets::layout::vBox::create();
     sideBarLayout->setup(sideBar);
+    sideBarLayout->setName("sideBarLayout");
 
     auto sideBarHeading = ofxWidgets::label::create();
     sideBarHeading->setup(sideBarLayout->_width, 50);
@@ -26,6 +28,22 @@ void ofApp::setup(){
     sideBarSubHeading->setFontSize(16);
     sideBarLayout->add(sideBarSubHeading);
     
+
+    mainLayout->add(sideBar);
+
+    auto content = ofxWidgets::widget::create();
+    content->setup(mainLayout->_width/5*4, mainLayout->_height);
+    content->setName("content");
+    auto contentLayout = ofxWidgets::layout::vBox::create();
+    contentLayout->setup(content);
+    contentLayout->setName("contentLayout");
+
+    _upperCircle = circle::create();
+    _upperCircle->setup(contentLayout->_width, contentLayout->_height/3);
+    _lowerCircle = circle::create();
+    _lowerCircle->setup(contentLayout->_width, contentLayout->_height/3);
+
+
     _value.set("value", 0.5, 0, 1);
     auto slider = ofxWidgets::floatSlider::create(_value);
     slider->setup(sideBarLayout->_width, 50);
@@ -34,27 +52,28 @@ void ofApp::setup(){
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
     button->setup(sideBarLayout->_width, 50);
+    button->setName("button");
     sideBarLayout->add(button);
 
+    auto toggle = ofxWidgets::toggle::create(_lowerCircle->_boost);
+    toggle->setup(sideBarLayout->_width, 50);
+    toggle->setName("toggle");
+    sideBarLayout->add(toggle);
+
     sideBar->add(sideBarLayout);
-    mainLayout->add(sideBar);
 
-    auto content = ofxWidgets::widget::create();
-    content->setup(mainLayout->_width/5*4, mainLayout->_height);
-    auto contentLayout = ofxWidgets::layout::vBox::create();
-    contentLayout->setup(content);
 
-    auto topWidget = ofxWidgets::test::create();
-    topWidget->setup(contentLayout->_width, contentLayout->_height/2);
-    auto bottomWidget = ofxWidgets::test::create();
-    bottomWidget->setup(contentLayout->_width, contentLayout->_height/2);
-
-    contentLayout->add(topWidget);
-    contentLayout->add(bottomWidget);
+    contentLayout->add(_upperCircle);
+    contentLayout->add(_lowerCircle);
+    contentLayout->add(button);
+    contentLayout->add(toggle);
     content->add(contentLayout);
 
     mainLayout->add(content);
     _gui.add(mainLayout);
+
+    _trigger.addListener(this, &ofApp::onTrigger);
+
 }
 
 void ofApp::update(){
@@ -89,4 +108,8 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
+}
+
+void ofApp::onTrigger(){
+    _upperCircle->_color = ofColor(ofRandom(255));
 }

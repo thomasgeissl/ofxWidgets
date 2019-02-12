@@ -9,6 +9,5 @@
 #include "./widgets/button.h"
 #include "./widgets/toggle.h"
 #include "./widgets/dropDown.h"
-#include "./widgets/test.h"
 
 namespace ofxYaga = ofxWidgets;

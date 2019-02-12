@@ -31,10 +31,10 @@ class toggle : public ofxWidgets::widget
             begin();
             if(_value){
                 ofSetColor(ofColor::green);
-                ofDrawRectangle(0,0, 50, 50);
+                ofDrawRectangle(0,0, _width, _height);
             }else{
                 ofSetColor(ofColor::red);
-                ofDrawRectangle(0,0, 50, 50);
+                ofDrawRectangle(0,0, _width, _height);
             }
             end();
         }

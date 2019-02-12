@@ -17,6 +17,7 @@ class button : public ofxWidgets::widget
         return std::make_shared<button>(parameter);
     }
     button() : widget() {
+        _color = ofColor::lightGrey;
     }
     button(ofParameter<void> parameter) : _trigger(parameter){
         button();
@@ -28,8 +29,9 @@ class button : public ofxWidgets::widget
         widget::update();
         if(_needsToBeRedrawn){
             begin();
-            ofSetColor(ofColor::red);
-            ofDrawRectangle(0,0, 50, 50);
+            ofSetColor(_color);
+            ofSetColor(ofColor::green);
+            ofDrawRectangle(0,0, _width, _height);
             end();
         }
     }

@@ -12,7 +12,8 @@ class widget
     {
         return std::make_shared<widget>();
     }
-    widget(){
+    widget()
+    {
         _color.addListener(this, &widget::onColorChange);
         _backgroundColor.addListener(this, &widget::onColorChange);
         _borderColor.addListener(this, &widget::onColorChange);
@@ -30,7 +31,8 @@ class widget
         _position = glm::vec2(0, 0);
     }
 
-    virtual void setup(pointer other){
+    virtual void setup(pointer other)
+    {
         _needsToBeRedrawn = true;
         _width = other->_width;
         _height = other->_height;
@@ -48,7 +50,7 @@ class widget
     virtual void update()
     {
         // update all children
-        for (auto & child : _children)
+        for (auto &child : _children)
         {
             if (child != nullptr)
             {
@@ -62,13 +64,15 @@ class widget
 
         // check if needs to be redrawn
         auto needsToBeRedrawn = false;
-        for (auto & child : _children)
+        for (auto &child : _children)
         {
-            if(child->_needsToBeRedrawn){
+            if (child->_needsToBeRedrawn)
+            {
                 needsToBeRedrawn = true;
             }
         }
-        if(!_needsToBeRedrawn && !needsToBeRedrawn){
+        if (!_needsToBeRedrawn && !needsToBeRedrawn)
+        {
             return;
         }
 
@@ -78,7 +82,7 @@ class widget
         ofDrawRectangle(0, 0, _width, _height);
 
         // draw each child
-        for (auto & child : _children)
+        for (auto &child : _children)
         {
             if (child != nullptr)
             {
@@ -97,70 +101,90 @@ class widget
         _fbo.draw(_position);
         setNeedsToBeRedrawn(false);
     }
-    virtual void keyPressed(int key) {
+    virtual void keyPressed(int key)
+    {
         auto w = getFocussedWidget();
-        if(w != nullptr){
+        if (w != nullptr)
+        {
             w->keyPressed(key);
         }
     }
-    virtual void keyReleased(int key) {
+    virtual void keyReleased(int key)
+    {
         auto w = getFocussedWidget();
-        if(w != nullptr){
+        if (w != nullptr)
+        {
             w->keyReleased(key);
         }
     }
-    virtual void mouseMoved(int x, int y) {
+    virtual void mouseMoved(int x, int y)
+    {
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
-            w->mouseMoved(x, y);
+        if (w != nullptr)
+        {
+            w->mouseMoved(x - w->_position.x, y - w->_position.y);
         }
     }
-    virtual void mouseDragged(int x, int y, int button) {
+    virtual void mouseDragged(int x, int y, int button)
+    {
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
-            w->mouseDragged(x, y, button);
+        if (w != nullptr)
+        {
+            w->mouseDragged(x - w->_position.x, y - w->_position.y, button);
         }
     }
-    virtual void mousePressed(int x, int y, int button) {
+    virtual void mousePressed(int x, int y, int button)
+    {
         auto focussedWidget = getFocussedWidget();
-        if(focussedWidget != nullptr){
+        if (focussedWidget != nullptr)
+        {
             focussedWidget->setFocus(false);
         }
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
+        if (w != nullptr)
+        {
+            ofLogNotice() << "widget::mousePressed " << _name;
             w->setFocus(true);
-            w->mousePressed(x, y, button);
+            w->mousePressed(x - w->_position.x, y - w->_position.y, button);
         }
     }
-    virtual void mouseReleased(int x, int y, int button) {
+    virtual void mouseReleased(int x, int y, int button)
+    {
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
-            w->mouseReleased(x, y, button);
+        if (w != nullptr)
+        {
+            w->mouseReleased(x - w->_position.x, y - w->_position.y, button);
         }
     }
-    virtual void mouseEntered(int x, int y) {
+    virtual void mouseEntered(int x, int y)
+    {
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
-            w->mouseEntered(x, y);
+        if (w != nullptr)
+        {
+            w->mouseEntered(x - w->_position.x, y - w->_position.y);
         }
     }
-    virtual void mouseExited(int x, int y) {
+    virtual void mouseExited(int x, int y)
+    {
         auto w = getWidgetAtPosition(x, y);
-        if(w != nullptr){
-            w->mouseExited(x, y);
+        if (w != nullptr)
+        {
+            w->mouseExited(x - w->_position.x, y - w->_position.y);
         }
     }
-    virtual void resized(int w, int h) {
-        float xFactor = w/_width;
-        float yFactor = h/_height;
+    virtual void resized(int w, int h)
+    {
+        float xFactor = w / _width;
+        float yFactor = h / _height;
         _width = w;
         _height = h;
         _fbo.allocate(_width, _height, GL_RGBA);
         setNeedsToBeRedrawn(true);
 
-        for(auto & child : _children){
+        for (auto &child : _children)
+        {
             child->resized(child->_width * xFactor, child->_height * yFactor);
-            child->_position *= glm::vec2(xFactor, yFactor); 
+            child->_position *= glm::vec2(xFactor, yFactor);
         }
     }
 
@@ -169,53 +193,67 @@ class widget
         _children.push_back(std::move(w));
     }
 
-    void setNeedsToBeRedrawn(bool value = true){
+    void setNeedsToBeRedrawn(bool value = true)
+    {
         _needsToBeRedrawn = value;
     }
 
-    void begin(bool clear = true){
+    void begin(bool clear = true)
+    {
         ofPushMatrix();
         _fbo.begin();
-        if(clear){
+        if (clear)
+        {
             ofClear(255, 0);
         }
     }
-    void end(){
+    void end()
+    {
         _fbo.end();
         ofPopMatrix();
     }
 
-    pointer getWidgetAtPosition(float x, float y){
+    pointer getWidgetAtPosition(float x, float y)
+    {
         pointer w = nullptr;
-        for(auto & child : _children){
-            if((x > child->_position.x && x < child->_position.x + child->_width) &&
-            (y > child->_position.y && y < child->_position.y + child->_height)){
+        for (auto &child : _children)
+        {
+            if ((x > child->_position.x && x < child->_position.x + child->_width) &&
+                (y > child->_position.y && y < child->_position.y + child->_height))
+            {
                 w = child;
             }
         }
         return w;
     }
-    pointer getFocussedWidget(){
+    pointer getFocussedWidget()
+    {
         pointer w = nullptr;
-        for(auto & child : _children){
-            if(child->_focussed){
+        for (auto &child : _children)
+        {
+            if (child->_focussed)
+            {
                 w = child;
             }
         }
         return w;
     }
 
-    void setFocus(bool value = true){
+    void setFocus(bool value = true)
+    {
         _focussed = value;
-        if(!value){
-            for(auto & child : _children){
+        if (!value)
+        {
+            for (auto &child : _children)
+            {
                 child->setFocus(value);
             }
         }
     }
 
     // listeners
-    void onColorChange(ofColor & color){
+    void onColorChange(ofColor &color)
+    {
         setNeedsToBeRedrawn(true);
     }
 

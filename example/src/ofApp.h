@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxWidgets.h"
+#include "circle.h"
 
 class ofApp : public ofBaseApp{
   public:
@@ -19,7 +20,12 @@ class ofApp : public ofBaseApp{
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    circle::pointer _upperCircle;
+    circle::pointer _lowerCircle;
     ofxWidgets::gui _gui;
     ofParameter<float> _value;
     ofParameter<void> _trigger;
+
+
+    void onTrigger();
 };
