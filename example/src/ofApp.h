@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxWidgets.h"
-#include "circle.h"
+#include "shape.h"
 
 class ofApp : public ofBaseApp
 {
@@ -21,14 +21,15 @@ public:
   void dragEvent(ofDragInfo dragInfo);
   void gotMessage(ofMessage msg);
 
-  circle::pointer _upperCircle;
-  circle::pointer _lowerCircle;
+  shape::pointer _upperShape;
+  shape::pointer _lowerShape;
   ofxWidgets::gui _gui;
   ofParameter<float> _value;
   ofParameter<void> _trigger;
 
   ofParameter<int> _intValue;
   ofParameter<float> _floatValue;
+  ofParameter<int> _intDropDownValue;
 
   void onTrigger();
 };

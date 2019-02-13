@@ -3,15 +3,15 @@
 #include "ofMain.h"
 #include "ofxWidgets.h"
 
-class circle : public ofxWidgets::widget
+class shape : public ofxWidgets::widget
 {
   public:
-    typedef std::shared_ptr<circle> pointer;
+    typedef std::shared_ptr<shape> pointer;
     static pointer create()
     {
-        return std::make_shared<circle>();
+        return std::make_shared<shape>();
     }
-    circle()
+    shape()
     {
         _color = ofColor::purple;
         _boost.set("boost", false);
@@ -21,12 +21,11 @@ class circle : public ofxWidgets::widget
     {
         widget::update();
 
-        _fbo.begin();
-        ofClear(255, 0);
+        begin();
         ofSetColor(_color);
         if (_boost)
         {
-            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef() * 100) * 20, _height / 2 + std::cos(ofGetElapsedTimef() * 100) * 20, 50);
+            ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef() * 10) * 20, _height / 2 + std::cos(ofGetElapsedTimef() * 10) * 20, 50);
         }
         else
         {
@@ -38,7 +37,7 @@ class circle : public ofxWidgets::widget
             ofSetColor(ofColor::red);
             ofDrawCircle(_width / 2 + std::sin(ofGetElapsedTimef()) * 20, _height / 2 + std::cos(ofGetElapsedTimef()) * 20, 10);
         }
-        _fbo.end();
+        end();
         setNeedsToBeRedrawn();
     }
     ofParameter<bool> _boost;

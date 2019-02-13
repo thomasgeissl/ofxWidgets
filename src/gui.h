@@ -59,6 +59,7 @@ class gui : public widget
 	}
 	void onDraw(ofEventArgs &e){
 		draw();
+        drawOverlay(_position);
 	}
     void onKeyPressed(ofKeyEventArgs & event) {
         keyPressed(event.key);

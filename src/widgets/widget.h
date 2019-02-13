@@ -14,39 +14,50 @@ class widget
     }
     widget()
     {
+        _color.set("color", ofColor::lightGrey);
+        _backgroundColor.set("backgroundColor", ofColor(255,0));
+
         _color.addListener(this, &widget::onColorChange);
         _backgroundColor.addListener(this, &widget::onColorChange);
         _borderColor.addListener(this, &widget::onColorChange);
         _fontSize.addListener(this, &widget::onFontSizeChange);
 
-
         _fontSize = 32;
         _focussed = false;
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
+
+        ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
+        settings.addRanges(ofAlphabet::Latin);
+        settings.contours = false;
+        settings.antialiased = true;
+        settings.simplifyAmt = 0;
+        _ttf.load(settings);
     }
 
-    virtual void setup(float width, float height)
+    virtual void setup(float width, float height, bool hasOverlay = true)
     {
         _needsToBeRedrawn = true;
         _width = width;
         _height = height;
         _fbo.allocate(_width, _height, GL_RGBA);
-        _fbo.begin();
-        ofClear(255, 0);
-        _fbo.end();
-        _position = glm::vec2(0, 0);
+        if(hasOverlay){
+            setupOverlay();
+        }
     }
 
-    virtual void setup(pointer other)
+    virtual void setup(pointer other, bool hasOverlay = true)
     {
         _needsToBeRedrawn = true;
         _width = other->_width;
         _height = other->_height;
         _fbo.allocate(_width, _height, GL_RGBA);
-        _fbo.begin();
-        ofClear(255, 0);
-        _fbo.end();
-        _position = glm::vec2(0, 0);
+        if(hasOverlay){
+            setupOverlay();
+        }
+    }
+    virtual void setupOverlay()
+    {
+        _overlay = ofxWidgets::widget::create();
+        _overlay->setup(_width, _height, false);
     }
 
     void setName(std::string name)
@@ -67,6 +78,9 @@ class widget
                 //remove child
             }
         }
+        if(_overlay != nullptr){
+            _overlay->update();
+        }
 
         // check if needs to be redrawn
         auto needsToBeRedrawn = false;
@@ -77,16 +91,17 @@ class widget
                 needsToBeRedrawn = true;
             }
         }
+
+        if (_overlay != nullptr && _overlay->_needsToBeRedrawn)
+        {
+            needsToBeRedrawn = true;
+        }
         if (!_needsToBeRedrawn && !needsToBeRedrawn)
         {
             return;
         }
 
         begin();
-        // draw the background
-        ofSetColor(_backgroundColor);
-        ofDrawRectangle(0, 0, _width, _height);
-
         // draw each child
         for (auto &child : _children)
         {
@@ -99,7 +114,7 @@ class widget
                 //remove child
             }
         }
-        updateOverlay();
+        // updateOverlay();
         end();
         setNeedsToBeRedrawn();
     }
@@ -110,6 +125,19 @@ class widget
     {
         _fbo.draw(_position);
         setNeedsToBeRedrawn(false);
+    }
+    void draw(glm::vec2 position)
+    {
+        _fbo.draw(position);
+    }
+    void drawOverlay(glm::vec2 position)
+    {
+        if(_overlay != nullptr && _overlayVisible){
+            _overlay->draw(position + _position + _overlay->_position);
+        }
+        for(auto & child : _children){
+            child->drawOverlay(position + _position);
+        }
     }
     virtual void keyPressed(int key)
     {
@@ -217,7 +245,8 @@ class widget
         _fbo.begin();
         if (clear)
         {
-            ofClear(255, 0);
+            // ofClear(255, 0);
+            ofClear(_backgroundColor);
         }
     }
     void end()
@@ -229,6 +258,17 @@ class widget
     pointer getWidgetAtPosition(float x, float y)
     {
         pointer w = nullptr;
+        if(_overlay != nullptr && _overlayVisible &&
+            x > _overlay->_position.x && 
+            x < _overlay->_position.x + _overlay->_width &&
+            y > _overlay->_position.y &&
+            y < _overlay->_position.y + _overlay->_height
+        ){
+            return _overlay;
+        }
+        // if(_overlay != nullptr){
+        //     ofLogNotice() << _overlayVisible <<": "<<x <<" "<<y << " "<<_overlay->_position;
+        // }
         for (auto &child : _children)
         {
             if ((x > child->_position.x && x < child->_position.x + child->_width) &&
@@ -271,15 +311,22 @@ class widget
     }
     void onFontSizeChange(int &value)
     {
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
+        ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
+        settings.addRanges(ofAlphabet::Latin);
+        settings.contours = false;
+        settings.antialiased = true;
+        settings.simplifyAmt = 0;
+        _ttf.load(settings);
         setNeedsToBeRedrawn(true);
     }
-
 
     bool _needsToBeRedrawn;
     ofFbo _fbo;
     glm::vec2 _position;
     std::vector<pointer> _children;
+    pointer _overlay;
+
+    bool _overlayVisible = false;
 
     std::string _name;
     float _width;

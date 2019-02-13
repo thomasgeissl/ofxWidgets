@@ -22,7 +22,7 @@ class toggle : public ofxWidgets::widget
         _color = ofColor::darkGrey;
         _inactiveColor = ofColor::lightGrey;
     }
-    toggle(ofParameter<bool> parameter) : _value(parameter)
+    toggle(ofParameter<bool> parameter) : widget(), _value(parameter)
     {
         _value.addListener(this, &toggle::onValueChange);
         _color = ofColor::darkGrey;

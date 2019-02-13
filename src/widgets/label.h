@@ -21,7 +21,7 @@ class label : public ofxWidgets::widget
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);
     }
-    label(ofParameter<std::string> parameter) : _text(parameter), widget()
+    label(ofParameter<std::string> parameter) : widget(), _text(parameter)
     {
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);
@@ -29,7 +29,7 @@ class label : public ofxWidgets::widget
 
     virtual void update()
     {
-        widget::update();
+        // widget::update();
         if (_needsToBeRedrawn)
         {
             begin();

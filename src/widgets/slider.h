@@ -41,7 +41,6 @@ class slider : public ofxWidgets::widget
 
     virtual void update()
     {
-        _needsToBeRedrawn = true;
         widget::update();
         if (_needsToBeRedrawn)
         {
@@ -115,11 +114,6 @@ class slider : public ofxWidgets::widget
     }
     void onValueChange(T &value)
     {
-        setNeedsToBeRedrawn(true);
-    }
-    void onFontSizeChange(int &value)
-    {
-        _ttf.load(ofToDataPath("Roboto-Light.ttf"), _fontSize);
         setNeedsToBeRedrawn(true);
     }
 
