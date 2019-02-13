@@ -24,9 +24,9 @@ class widget
 
         _fontSize = 32;
         _focussed = false;
+        _hovered = false;
 
         ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
-        settings.addRanges(ofAlphabet::Latin);
         settings.contours = false;
         settings.antialiased = true;
         settings.simplifyAmt = 0;
@@ -199,6 +199,9 @@ class widget
         if (w != nullptr)
         {
             w->mouseEntered(x - w->_position.x, y - w->_position.y);
+        }else{
+            _hovered = true;
+            setNeedsToBeRedrawn(true);
         }
     }
     virtual void mouseExited(int x, int y)
@@ -208,6 +211,7 @@ class widget
         {
             w->mouseExited(x - w->_position.x, y - w->_position.y);
         }
+        _hovered = false;
     }
     virtual void resized(int w, int h)
     {
@@ -312,7 +316,6 @@ class widget
     void onFontSizeChange(int &value)
     {
         ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
-        settings.addRanges(ofAlphabet::Latin);
         settings.contours = false;
         settings.antialiased = true;
         settings.simplifyAmt = 0;
@@ -332,6 +335,7 @@ class widget
     float _width;
     float _height;
     bool _focussed;
+    bool _hovered;
 
     ofTrueTypeFont _ttf;
 

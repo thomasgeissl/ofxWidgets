@@ -1,13 +1,13 @@
 #pragma once
 
 #include "ofMain.h"
-#include "../widgets/widget.h"
+#include "./box.h"
 
 namespace ofxWidgets
 {
 namespace layout
 {
-class hBox : public ofxWidgets::widget
+class hBox : public ofxWidgets::layout::box
 {
   public:
     typedef std::shared_ptr<hBox> pointer;
@@ -25,6 +25,8 @@ class hBox : public ofxWidgets::widget
         }
         widget::add(w);
     }
+
+    ofParameter<float> _horizontalOffset;
 };
 }; // namespace layout
 }; // namespace ofxWidgets

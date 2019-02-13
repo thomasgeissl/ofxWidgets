@@ -19,10 +19,12 @@ class button : public ofxWidgets::widget
     button() : widget()
     {
         _color = ofColor::lightGrey;
+        setFontSize(16);
     }
     button(ofParameter<void> parameter) : _trigger(parameter)
     {
         _color = ofColor::lightGrey;
+        setFontSize(16);
     }
 
     virtual void update()
@@ -33,6 +35,15 @@ class button : public ofxWidgets::widget
             begin();
             ofSetColor(_color);
             ofDrawRectangle(0, 0, _width, _height);
+            ofSetColor(ofColor::black);
+            // _ttf.drawString(_trigger.getName(), 0, _height/2 + _fontSize/2);
+
+            if(_hovered){
+                ofNoFill();
+                ofSetColor(ofColor::green);
+                ofSetLineWidth(2);
+                ofDrawRectangle(0, 0, _width, _height);
+            }
             end();
         }
     }

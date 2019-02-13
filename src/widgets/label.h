@@ -35,6 +35,7 @@ class label : public ofxWidgets::widget
             begin();
             ofFill();
             ofSetColor(_color);
+            ofSetLineWidth(3);
             _ttf.drawString(_text, 0, 36);
             end();
         }

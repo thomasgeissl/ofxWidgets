@@ -15,7 +15,7 @@ void ofApp::setup()
     auto sideBar = ofxWidgets::widget::create();
     sideBar->setup(mainLayout->_width / 5, mainLayout->_height);
     sideBar->setName("sideBar");
-    sideBar->_backgroundColor = ofColor(16, 16, 16);
+    sideBar->_backgroundColor = ofColor(24,255);
 
     auto sideBarLayout = ofxWidgets::layout::vBox::create();
     sideBarLayout->setup(sideBar);
@@ -40,11 +40,13 @@ void ofApp::setup()
     _floatValue.set("float", 0.5, 0, 1);
 
     auto intSlider = ofxWidgets::intSlider::create(_intValue);
-    intSlider->setup(sideBarLayout->_width, 50);
+    intSlider->setup(sideBarLayout->_width, 10);
+    intSlider->_color = ofColor(170, 105, 57);
     sideBarLayout->add(intSlider);
 
     auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
-    floatSlider->setup(sideBarLayout->_width, 50);
+    floatSlider->setup(10, 50);
+    floatSlider->_color = ofColor(170, 105, 57);
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
@@ -54,16 +56,19 @@ void ofApp::setup()
     options.push_back(ofxWidgets::intDropDown::createOption(2, "medium"));
     options.push_back(ofxWidgets::intDropDown::createOption(3, "large"));
     auto intDropDown = ofxWidgets::intDropDown::create(_intDropDownValue, options);
-    intDropDown->setup(intSlider);
+    intDropDown->setup(sideBarLayout->_width, 50);
     sideBarLayout->add(intDropDown);
 
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
     button->setup(sideBarLayout->_width, 50);
+    button->_color = ofColor(191,137,79);
     sideBarLayout->add(button);
 
     auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
     toggle->setup(sideBarLayout->_width, 50);
+    toggle->_color = ofColor(149,77,24);
+    toggle->_inactiveColor = ofColor(191,137,79);
     sideBarLayout->add(toggle);
 
 

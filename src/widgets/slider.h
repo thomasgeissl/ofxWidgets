@@ -30,6 +30,7 @@ class slider : public ofxWidgets::widget
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
         _color = ofColor::darkGrey;
+        _backgroundColor = ofColor::lightGrey;
     }
 
     slider(ofParameter<T> parameter) : widget(), _value(parameter)
@@ -37,6 +38,7 @@ class slider : public ofxWidgets::widget
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
         _color = ofColor::darkGrey;
+        _backgroundColor = ofColor::lightGrey;
     }
 
     virtual void update()
