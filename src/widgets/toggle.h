@@ -16,36 +16,53 @@ class toggle : public ofxWidgets::widget
     {
         return std::make_shared<toggle>(parameter);
     }
-    toggle() : widget()
+    toggle() : widget(), _checkedText("on"), _unCheckedText("off")
     {
         _value.addListener(this, &toggle::onValueChange);
-        _color = ofColor::darkGrey;
-        _inactiveColor = ofColor::lightGrey;
     }
-    toggle(ofParameter<bool> parameter) : widget(), _value(parameter)
+    toggle(ofParameter<bool> parameter) : widget(), _value(parameter), _checkedText("on"), _unCheckedText("off")
     {
         _value.addListener(this, &toggle::onValueChange);
-        _color = ofColor::darkGrey;
-        _inactiveColor = ofColor::lightGrey;
-        _backgroundColor = ofColor::lightGrey;
     }
 
+    virtual void setup(int width, int height, bool hasOverlay = true){
+        widget::setup(width, height, hasOverlay);
+        _label = ofxWidgets::label::create();
+        _label->_text = _value.getName();
+        _label->setup(_width, height/2);
+        _label->_position = glm::vec2(0, height/2);
+        _label->_color = ofColor::white;
+        add(_label);
+    }
     virtual void update()
     {
-        widget::update();
         if (_needsToBeRedrawn)
         {
-            begin();
+            if(_value){
+                _label->_text = _value.getName() + ": "+_checkedText;
+            }else{
+                _label->_text = _value.getName() + ": "+_unCheckedText;
+            }
+            _label->setNeedsToBeRedrawn(true);
+            widget::update();
+            begin(false);
+            float offset = _height * 0.05;
+            float height = _height - 2 * offset;
+            height /= 2;
+            float width = _width/2 - 2 * offset;
+            float x = offset;
+            float y = offset;
             if (_value)
             {
                 ofSetColor(_color);
-                ofDrawRectangle(_width / 2 + _width / 2 * 0.05, _height * 0.05, _width / 2 * 0.9, _height * 0.9);
+                ofDrawRectangle(_width/2 + x , y, width, height);
             }
             else
             {
-                ofSetColor(_inactiveColor);
-                ofDrawRectangle(_width / 2 * 0.05, _height * 0.05, _width / 2 * 0.9, _height * 0.9);
+                ofSetColor(brigthenColor(_color, -.5));
+                ofDrawRectangle(x, y, width, height);
             }
+            _label->draw();
             end();
         }
     }
@@ -53,20 +70,16 @@ class toggle : public ofxWidgets::widget
     {
         widget::mousePressed(x, y, button);
         _value = !_value;
-        // TODO: highlight
     }
-    virtual void mouseReleased(int x, int y, int button)
-    {
-        widget::mouseReleased(x, y, button);
-        // TODO: unhighlight
-    }
-
     void onValueChange(bool &value)
     {
         setNeedsToBeRedrawn(true);
     }
 
     ofParameter<bool> _value;
-    ofParameter<ofColor> _inactiveColor;
+    ofxWidgets::label::pointer _label;
+
+    std::string _checkedText;
+    std::string _unCheckedText;
 };
 }; // namespace ofxWidgets

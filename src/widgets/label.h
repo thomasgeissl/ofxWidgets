@@ -62,7 +62,6 @@ class label : public ofxWidgets::widget
     void setText(std::string text)
     {
         _text = text;
-        setNeedsToBeRedrawn(true);
     }
     void onTextChange(std::string &value)
     {

@@ -7,6 +7,7 @@ void ofApp::setup()
 
     // # main
     _gui.setName("gui");
+    _gui._backgroundColor = ofColor(64, 255);
     auto mainLayout = ofxWidgets::layout::hBox::create();
     mainLayout->setup(_gui._width, _gui._height);
     _gui.add(mainLayout);
@@ -40,13 +41,13 @@ void ofApp::setup()
     _floatValue.set("float", 0.5, 0, 1);
 
     auto intSlider = ofxWidgets::intSlider::create(_intValue);
-    intSlider->setup(sideBarLayout->_width, 10);
-    intSlider->_color = ofColor(170, 105, 57);
+    intSlider->setup(sideBarLayout->_width, 40);
+    intSlider->_color = ofColor(149,77,24);
     sideBarLayout->add(intSlider);
 
     auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
-    floatSlider->setup(10, 50);
-    floatSlider->_color = ofColor(170, 105, 57);
+    floatSlider->setup(20 * 10, 80);
+    floatSlider->_color = ofColor(149,77,24);
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
@@ -62,13 +63,12 @@ void ofApp::setup()
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
     button->setup(sideBarLayout->_width, 20);
-    button->_color = ofColor(191,137,79);
+    button->_color = ofColor(149,77,24);
     sideBarLayout->add(button);
 
     auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
-    toggle->setup(sideBarLayout->_width, 20);
+    toggle->setup(sideBarLayout->_width, 40);
     toggle->_color = ofColor(149,77,24);
-    toggle->_inactiveColor = ofColor(191,137,79);
     sideBarLayout->add(toggle);
 
 
@@ -80,7 +80,7 @@ void ofApp::setup()
     auto content = ofxWidgets::widget::create();
     content->setup(mainLayout->_width - sideBarWidth, mainLayout->_height);
     content->setName("content");
-    content->_backgroundColor = ofColor(64, 255);
+    content->_backgroundColor = _gui._backgroundColor;
 
     auto contentLayout = ofxWidgets::layout::vBox::create();
     contentLayout->setup(content);

@@ -44,8 +44,10 @@ class widget
         _backgroundColor.set("backgroundColor", ofColor(255, 0));
 
         _fontSize = 32;
-        _focussed = false;
-        _hovered = false;
+
+        // border
+        _borderColor.set("borderColor", ofColor(255, 0));
+        _borderWidth.set("borderWidth", 0, 0, 100);
 
         ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
         settings.contours = false;
@@ -56,9 +58,11 @@ class widget
 
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
+        _children.clear();
         _needsToBeRedrawn = true;
         _width = width;
         _height = height;
+        _hasOverlay = hasOverlay;
         _fbo.allocate(_width, _height, GL_RGBA);
         if (hasOverlay)
         {
@@ -132,6 +136,11 @@ class widget
             }
         }
         // updateOverlay();
+        ofNoFill();
+        ofSetColor(_borderColor);
+        ofSetLineWidth(_borderWidth);
+        ofDrawRectangle(0, 0, _width, _height);
+
         end();
         setNeedsToBeRedrawn();
     }
@@ -189,6 +198,7 @@ class widget
             auto w = getWidgetAtPosition(x, y);
             if (w != nullptr)
             {
+                return;
                 w->mouseMoved(x - w->_position.x, y - w->_position.y);
             }
         }
@@ -379,6 +389,7 @@ class widget
     }
 
     bool _needsToBeRedrawn;
+    bool _hasOverlay;
     ofFbo _fbo;
     glm::vec2 _position;
     std::vector<pointer> _children;
@@ -399,11 +410,14 @@ class widget
     ofParameterGroup _parameters;
     ofParameter<ofColor> _color;
     ofParameter<ofColor> _backgroundColor;
-    ofParameter<ofColor> _borderColor;
     ofParameter<int> _fontSize;
     alignment _alignment;
     alignment _verticalAlignment;
 
-    int _borderWidth;
+    ofParameter<ofColor> _borderColor;
+    ofParameter<float> _borderWidth;
+
+
+    static ofParameter<bool> _debug;
 };
 }; // namespace ofxWidgets

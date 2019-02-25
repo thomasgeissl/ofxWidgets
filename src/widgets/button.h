@@ -37,17 +37,18 @@ class button : public ofxWidgets::widget
 
     virtual void update()
     {
-        _label->update();
         if (_needsToBeRedrawn)
         {
+            // widget::update();
+            _label->update();
             begin();
             if (_pressed)
             {
-                ofSetColor(brigthenColor(_color, -0.25));
+                ofSetColor(_color);
             }
             else
             {
-                ofSetColor(_color);
+                ofSetColor(brigthenColor(_color, -0.5));
             }
             ofDrawRectangle(0, 0, _width, _height);
             _label->draw();
@@ -56,7 +57,7 @@ class button : public ofxWidgets::widget
             {
                 ofNoFill();
                 ofSetColor(brigthenColor(_color, -0.25));
-                ofSetLineWidth(2);
+                ofSetLineWidth(1);
                 ofDrawRectangle(0, 0, _width, _height);
             }
             end();
@@ -66,14 +67,6 @@ class button : public ofxWidgets::widget
     {
         widget::mousePressed(x, y, button);
         _trigger.trigger();
-    }
-    virtual void mouseReleased(int x, int y, int button)
-    {
-        widget::mouseReleased(x, y, button);
-    }
-    virtual void mouseExited(int x, int y)
-    {
-        widget::mouseExited(x, y);
     }
 
     ofParameter<void> _trigger;
