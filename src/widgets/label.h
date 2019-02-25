@@ -18,6 +18,7 @@ class label : public ofxWidgets::widget
     }
     label() : widget()
     {
+        ofTrueTypeFont::setGlobalDpi(72);
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);
     }
@@ -26,17 +27,35 @@ class label : public ofxWidgets::widget
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);
     }
+    virtual void setup(int width, int height, bool hasOverlay = true)
+    {
+        widget::setup(width, height, hasOverlay);
+        // TODO: calculate font size based on height and width
+        _fontSize = height * .8;
+    }
 
     virtual void update()
     {
-        // widget::update();
         if (_needsToBeRedrawn)
         {
-            begin();
+            widget::update();
+            begin(false);
             ofFill();
             ofSetColor(_color);
-            ofSetLineWidth(3);
-            _ttf.drawString(_text, 0, 36);
+            auto boundingBox = _ttf.getStringBoundingBox(_text, 0, 0);
+            auto width = boundingBox.getWidth();
+            if (_alignment == alignment::left)
+            {
+                _ttf.drawString(_text, 0, _fontSize);
+            }
+            else if (_alignment == alignment::center)
+            {
+                _ttf.drawString(_text, _width / 2 - width / 2, _fontSize);
+            }
+            else
+            {
+                _ttf.drawString(_text, _width - width, _fontSize);
+            }
             end();
         }
     }

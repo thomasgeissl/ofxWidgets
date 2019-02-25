@@ -13,7 +13,8 @@ void ofApp::setup()
 
     // ## sidebar
     auto sideBar = ofxWidgets::widget::create();
-    sideBar->setup(mainLayout->_width / 5, mainLayout->_height);
+    auto sideBarWidth = (int)(mainLayout->_width / 5);
+    sideBar->setup(sideBarWidth, mainLayout->_height);
     sideBar->setName("sideBar");
     sideBar->_backgroundColor = ofColor(24,255);
 
@@ -25,15 +26,14 @@ void ofApp::setup()
 
     auto sideBarHeading = ofxWidgets::label::create();
     sideBarHeading->setup(sideBarLayout->_width, 50);
-    sideBarHeading->setText("Sidebar");
+    sideBarHeading->setText("ofxWidgets Demo");
     sideBarHeading->_backgroundColor = ofColor(255, 0);
     sideBarLayout->add(sideBarHeading);
 
     auto sideBarSubHeading = ofxWidgets::label::create();
-    sideBarSubHeading->setup(sideBarLayout->_width, 50);
+    sideBarSubHeading->setup(sideBarLayout->_width, 40);
     sideBarSubHeading->setText("Settings");
     sideBarSubHeading->_backgroundColor = ofColor(255, 0);
-    sideBarSubHeading->setFontSize(24);
     sideBarLayout->add(sideBarSubHeading);
 
     _intValue.set("int", 20, 0, 100);
@@ -61,12 +61,12 @@ void ofApp::setup()
 
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
-    button->setup(sideBarLayout->_width, 50);
+    button->setup(sideBarLayout->_width, 20);
     button->_color = ofColor(191,137,79);
     sideBarLayout->add(button);
 
     auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
-    toggle->setup(sideBarLayout->_width, 50);
+    toggle->setup(sideBarLayout->_width, 20);
     toggle->_color = ofColor(149,77,24);
     toggle->_inactiveColor = ofColor(191,137,79);
     sideBarLayout->add(toggle);
@@ -78,7 +78,7 @@ void ofApp::setup()
 
     // ## content
     auto content = ofxWidgets::widget::create();
-    content->setup(mainLayout->_width / 5 * 4, mainLayout->_height);
+    content->setup(mainLayout->_width - sideBarWidth, mainLayout->_height);
     content->setName("content");
     content->_backgroundColor = ofColor(64, 255);
 
@@ -98,13 +98,19 @@ void ofApp::setup()
     _trigger.addListener(this, &ofApp::onTrigger);
 
 
-    auto testLabel = ofxWidgets::label::create();
-    testLabel->setup(contentLayout->_width, 50);
-    testLabel->setText("test label");
-    testLabel->setFontSize(38);
-    testLabel->_color = ofColor::purple;
-    testLabel->_color = ofColor::black;
-    contentLayout->add(testLabel);
+    std::vector<std::string> testListItems;
+    testListItems.push_back("first list item");
+    testListItems.push_back("second list item");
+    testListItems.push_back("third list item");
+    _testListIndex.set("testListIndex", 0, 0, testListItems.size());
+    auto testList = ofxWidgets::list::create(_testListIndex, testListItems);
+    testList->setup(contentLayout->_width, 100);
+    testList->setAlignment(ofxWidgets::widget::alignment::center);
+    contentLayout->add(testList);
+
+    auto listIndexSlider = ofxWidgets::intSlider::create(_testListIndex);
+    listIndexSlider->setup(contentLayout->_width, 10);
+    contentLayout->add(listIndexSlider);
 }
 
 void ofApp::update()

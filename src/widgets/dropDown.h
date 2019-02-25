@@ -18,7 +18,8 @@ class dropDown : public ofxWidgets::widget
         {
             return std::make_shared<overlay>(value, options);
         }
-        overlay(ofParameter<T> value, std::vector<option> options) : _value(value), _options(options){
+        overlay(ofParameter<T> value, std::vector<option> options) : _value(value), _options(options)
+        {
             setFontSize(24);
         }
         void update()
@@ -26,7 +27,8 @@ class dropDown : public ofxWidgets::widget
             widget::update();
             begin();
             auto y = 0;
-            for(auto & opt : _options){
+            for (auto &opt : _options)
+            {
                 ofSetColor(ofColor::lightGrey);
                 ofDrawRectangle(0, y, _width, 18);
                 ofSetColor(ofColor::black);

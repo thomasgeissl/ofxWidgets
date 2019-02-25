@@ -7,6 +7,21 @@ namespace ofxWidgets
 class widget
 {
   public:
+    enum alignment
+    {
+        left,
+        center,
+        right,
+        top,
+        bottom
+    };
+    static ofColor brigthenColor(ofColor color, float amount)
+    {
+        auto brightness = color.getBrightness();
+        ofColor brightenedColor = color;
+        brightenedColor.setBrightness(brightness * (1 + amount));
+        return brightenedColor;
+    }
     typedef std::shared_ptr<widget> pointer;
     static pointer create()
     {
@@ -14,13 +29,19 @@ class widget
     }
     widget()
     {
-        _color.set("color", ofColor::lightGrey);
-        _backgroundColor.set("backgroundColor", ofColor(255,0));
+        _pressed.addListener(this, &widget::onPressedChange);
+        _pressed.set("pressed", false);
+        _hovered.set("hovered", false);
 
+        _alignment = alignment::left;
+        _verticalAlignment = alignment::top;
         _color.addListener(this, &widget::onColorChange);
         _backgroundColor.addListener(this, &widget::onColorChange);
         _borderColor.addListener(this, &widget::onColorChange);
         _fontSize.addListener(this, &widget::onFontSizeChange);
+
+        _color.set("color", ofColor::lightGrey);
+        _backgroundColor.set("backgroundColor", ofColor(255, 0));
 
         _fontSize = 32;
         _focussed = false;
@@ -33,26 +54,21 @@ class widget
         _ttf.load(settings);
     }
 
-    virtual void setup(float width, float height, bool hasOverlay = true)
+    virtual void setup(int width, int height, bool hasOverlay = true)
     {
         _needsToBeRedrawn = true;
         _width = width;
         _height = height;
         _fbo.allocate(_width, _height, GL_RGBA);
-        if(hasOverlay){
+        if (hasOverlay)
+        {
             setupOverlay();
         }
     }
 
     virtual void setup(pointer other, bool hasOverlay = true)
     {
-        _needsToBeRedrawn = true;
-        _width = other->_width;
-        _height = other->_height;
-        _fbo.allocate(_width, _height, GL_RGBA);
-        if(hasOverlay){
-            setupOverlay();
-        }
+        setup(other->_width, other->_height, hasOverlay);
     }
     virtual void setupOverlay()
     {
@@ -78,7 +94,8 @@ class widget
                 //remove child
             }
         }
-        if(_overlay != nullptr){
+        if (_overlay != nullptr)
+        {
             _overlay->update();
         }
 
@@ -132,10 +149,12 @@ class widget
     }
     void drawOverlay(glm::vec2 position)
     {
-        if(_overlay != nullptr && _overlayVisible){
+        if (_overlay != nullptr && _overlayVisible)
+        {
             _overlay->draw(position + _position + _overlay->_position);
         }
-        for(auto & child : _children){
+        for (auto &child : _children)
+        {
             child->drawOverlay(position + _position);
         }
     }
@@ -157,10 +176,21 @@ class widget
     }
     virtual void mouseMoved(int x, int y)
     {
-        auto w = getWidgetAtPosition(x, y);
-        if (w != nullptr)
+        if (!_hovered)
         {
-            w->mouseMoved(x - w->_position.x, y - w->_position.y);
+            for (auto &child : _children)
+            {
+                child->mouseExited(x - child->_position.x, y - child->_position.y);
+            }
+            mouseEntered(x, y);
+        }
+        else
+        {
+            auto w = getWidgetAtPosition(x, y);
+            if (w != nullptr)
+            {
+                w->mouseMoved(x - w->_position.x, y - w->_position.y);
+            }
         }
     }
     virtual void mouseDragged(int x, int y, int button)
@@ -184,6 +214,10 @@ class widget
             w->setFocus(true);
             w->mousePressed(x - w->_position.x, y - w->_position.y, button);
         }
+        else
+        {
+            _pressed = true;
+        }
     }
     virtual void mouseReleased(int x, int y, int button)
     {
@@ -192,6 +226,10 @@ class widget
         {
             w->mouseReleased(x - w->_position.x, y - w->_position.y, button);
         }
+        else
+        {
+            _pressed = false;
+        }
     }
     virtual void mouseEntered(int x, int y)
     {
@@ -199,24 +237,27 @@ class widget
         if (w != nullptr)
         {
             w->mouseEntered(x - w->_position.x, y - w->_position.y);
-        }else{
+        }
+        else
+        {
             _hovered = true;
             setNeedsToBeRedrawn(true);
         }
     }
     virtual void mouseExited(int x, int y)
     {
-        auto w = getWidgetAtPosition(x, y);
-        if (w != nullptr)
-        {
-            w->mouseExited(x - w->_position.x, y - w->_position.y);
-        }
         _hovered = false;
+        _pressed = false;
+        setNeedsToBeRedrawn(true);
+        for (auto &child : _children)
+        {
+            child->mouseExited(x - child->_position.x, y - child->_position.y);
+        }
     }
     virtual void resized(int w, int h)
     {
-        float xFactor = w / _width;
-        float yFactor = h / _height;
+        auto xFactor = (float)(w) / _width;
+        auto yFactor = (float)(h) / _height;
         _width = w;
         _height = h;
         _fbo.allocate(_width, _height, GL_RGBA);
@@ -224,7 +265,7 @@ class widget
 
         for (auto &child : _children)
         {
-            child->resized(child->_width * xFactor, child->_height * yFactor);
+            child->resized((float)(child->_width) * xFactor, (float)(child->_height) * yFactor);
             child->_position *= glm::vec2(xFactor, yFactor);
         }
     }
@@ -234,9 +275,17 @@ class widget
         _children.push_back(std::move(w));
     }
 
-    void setFontSize(int fontSize)
+    virtual void setFontSize(int fontSize)
     {
         _fontSize = fontSize;
+    }
+    virtual void setAlignment(alignment a)
+    {
+        _alignment = a;
+    }
+    void setVerticalAlignment(alignment a)
+    {
+        _verticalAlignment = a;
     }
     void setNeedsToBeRedrawn(bool value = true)
     {
@@ -246,6 +295,7 @@ class widget
     void begin(bool clear = true)
     {
         ofPushMatrix();
+        ofPushStyle();
         _fbo.begin();
         if (clear)
         {
@@ -256,18 +306,19 @@ class widget
     void end()
     {
         _fbo.end();
+        ofPopStyle();
         ofPopMatrix();
     }
 
     pointer getWidgetAtPosition(float x, float y)
     {
         pointer w = nullptr;
-        if(_overlay != nullptr && _overlayVisible &&
-            x > _overlay->_position.x && 
+        if (_overlay != nullptr && _overlayVisible &&
+            x > _overlay->_position.x &&
             x < _overlay->_position.x + _overlay->_width &&
             y > _overlay->_position.y &&
-            y < _overlay->_position.y + _overlay->_height
-        ){
+            y < _overlay->_position.y + _overlay->_height)
+        {
             return _overlay;
         }
         // if(_overlay != nullptr){
@@ -322,6 +373,10 @@ class widget
         _ttf.load(settings);
         setNeedsToBeRedrawn(true);
     }
+    void onPressedChange(bool &value)
+    {
+        setNeedsToBeRedrawn(true);
+    }
 
     bool _needsToBeRedrawn;
     ofFbo _fbo;
@@ -332,10 +387,11 @@ class widget
     bool _overlayVisible = false;
 
     std::string _name;
-    float _width;
-    float _height;
-    bool _focussed;
-    bool _hovered;
+    int _width;
+    int _height;
+    ofParameter<bool> _focussed;
+    ofParameter<bool> _hovered;
+    ofParameter<bool> _pressed;
 
     ofTrueTypeFont _ttf;
 
@@ -345,8 +401,8 @@ class widget
     ofParameter<ofColor> _backgroundColor;
     ofParameter<ofColor> _borderColor;
     ofParameter<int> _fontSize;
-    // alignment (left, center, right)
-    // verticalAlignment (top, center, bottom)
+    alignment _alignment;
+    alignment _verticalAlignment;
 
     int _borderWidth;
 };

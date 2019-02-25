@@ -15,6 +15,11 @@ class hBox : public ofxWidgets::layout::box
     {
         return std::make_shared<hBox>();
     }
+    hBox(){
+        _horizontalOffset.set("horizontalOffset", 0, 0, 1024*4);
+        _horizontalOffset.addListener(this, &hBox::offsetChanged);
+    }
+
     virtual void add(ofxWidgets::widget::pointer w)
     {
         if (_children.size() > 0)
@@ -25,6 +30,10 @@ class hBox : public ofxWidgets::layout::box
         }
         widget::add(w);
     }
+    void offsetChanged(float & value){
+        recalculatePositions();
+    }
+
 
     ofParameter<float> _horizontalOffset;
 };

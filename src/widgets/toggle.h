@@ -27,6 +27,7 @@ class toggle : public ofxWidgets::widget
         _value.addListener(this, &toggle::onValueChange);
         _color = ofColor::darkGrey;
         _inactiveColor = ofColor::lightGrey;
+        _backgroundColor = ofColor::lightGrey;
     }
 
     virtual void update()
@@ -38,12 +39,12 @@ class toggle : public ofxWidgets::widget
             if (_value)
             {
                 ofSetColor(_color);
-                ofDrawRectangle(0, 0, _width, _height);
+                ofDrawRectangle(_width / 2 + _width / 2 * 0.05, _height * 0.05, _width / 2 * 0.9, _height * 0.9);
             }
             else
             {
                 ofSetColor(_inactiveColor);
-                ofDrawRectangle(0, 0, _width, _height);
+                ofDrawRectangle(_width / 2 * 0.05, _height * 0.05, _width / 2 * 0.9, _height * 0.9);
             }
             end();
         }

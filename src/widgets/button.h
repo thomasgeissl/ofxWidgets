@@ -25,22 +25,37 @@ class button : public ofxWidgets::widget
     {
         _color = ofColor::lightGrey;
         setFontSize(16);
+        _label = ofxWidgets::label::create();
+        _label->_text = parameter.getName();
+        _label->setAlignment(ofxWidgets::widget::alignment::center);
+    }
+    virtual void setup(int width, int height, bool hasOverlay = true)
+    {
+        widget::setup(width, height, hasOverlay);
+        _label->setup(_width, _height);
     }
 
     virtual void update()
     {
-        widget::update();
+        _label->update();
         if (_needsToBeRedrawn)
         {
             begin();
-            ofSetColor(_color);
+            if (_pressed)
+            {
+                ofSetColor(brigthenColor(_color, -0.25));
+            }
+            else
+            {
+                ofSetColor(_color);
+            }
             ofDrawRectangle(0, 0, _width, _height);
-            ofSetColor(ofColor::black);
-            // _ttf.drawString(_trigger.getName(), 0, _height/2 + _fontSize/2);
+            _label->draw();
 
-            if(_hovered){
+            if (_hovered)
+            {
                 ofNoFill();
-                ofSetColor(ofColor::green);
+                ofSetColor(brigthenColor(_color, -0.25));
                 ofSetLineWidth(2);
                 ofDrawRectangle(0, 0, _width, _height);
             }
@@ -51,14 +66,17 @@ class button : public ofxWidgets::widget
     {
         widget::mousePressed(x, y, button);
         _trigger.trigger();
-        // TODO: highlight
     }
     virtual void mouseReleased(int x, int y, int button)
     {
         widget::mouseReleased(x, y, button);
-        // TODO: unhighlight
+    }
+    virtual void mouseExited(int x, int y)
+    {
+        widget::mouseExited(x, y);
     }
 
     ofParameter<void> _trigger;
+    ofxWidgets::label::pointer _label;
 };
 }; // namespace ofxWidgets

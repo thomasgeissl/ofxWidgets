@@ -16,7 +16,7 @@ class vBox : public ofxWidgets::layout::box
         return std::make_shared<vBox>();
     }
     vBox(){
-        _verticalOffset.set("verticalOffset", 24, 0, 1024*4);
+        _verticalOffset.set("verticalOffset", 0, 0, 1024*4);
         _verticalOffset.addListener(this, &vBox::offsetChanged);
     }
     virtual void add(ofxWidgets::widget::pointer w)

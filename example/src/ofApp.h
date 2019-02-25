@@ -30,6 +30,7 @@ public:
   ofParameter<int> _intValue;
   ofParameter<float> _floatValue;
   ofParameter<int> _intDropDownValue;
+  ofParameter<int> _testListIndex;
 
   void onTrigger();
 };
