@@ -29,6 +29,7 @@ class label : public ofxWidgets::widget
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
+        _children.clear();
         widget::setup(width, height, hasOverlay);
         // TODO: calculate font size based on height and width
         _fontSize = height * .8;

@@ -26,6 +26,7 @@ class toggle : public ofxWidgets::widget
     }
 
     virtual void setup(int width, int height, bool hasOverlay = true){
+        _children.clear();
         widget::setup(width, height, hasOverlay);
         _label = ofxWidgets::label::create();
         _label->_text = _value.getName();
@@ -62,6 +63,10 @@ class toggle : public ofxWidgets::widget
                 ofSetColor(brigthenColor(_color, -.5));
                 ofDrawRectangle(x, y, width, height);
             }
+            ofNoFill();
+            ofSetLineWidth(1);
+            ofDrawRectangle(x, y, _width - 2 * offset, height);
+            ofFill();
             _label->draw();
             end();
         }

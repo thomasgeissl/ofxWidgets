@@ -59,6 +59,7 @@ class list : public ofxWidgets::widget
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
+        _children.clear();
         widget::setup(width, height, hasOverlay);
         auto layout = ofxWidgets::layout::vBox::create();
         layout->_verticalOffset = 2;

@@ -409,6 +409,7 @@ class widget
     // style
     ofParameterGroup _parameters;
     ofParameter<ofColor> _color;
+    ofParameter<ofColor> _secondaryColor;
     ofParameter<ofColor> _backgroundColor;
     ofParameter<int> _fontSize;
     alignment _alignment;
@@ -416,7 +417,6 @@ class widget
 
     ofParameter<ofColor> _borderColor;
     ofParameter<float> _borderWidth;
-
 
     static ofParameter<bool> _debug;
 };

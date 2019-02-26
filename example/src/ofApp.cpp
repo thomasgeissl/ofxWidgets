@@ -2,6 +2,9 @@
 
 void ofApp::setup()
 {
+    ofSetFrameRate(60);
+    ofEnableAntiAliasing();
+
     _upperShape = shape::create();
     _lowerShape = shape::create();
 
@@ -44,11 +47,14 @@ void ofApp::setup()
     auto intSlider = ofxWidgets::intSlider::create(_intValue);
     intSlider->setup(sideBarLayout->_width, 40);
     intSlider->_color = ofColor(149,77,24);
+    intSlider->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(intSlider);
 
     auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
     floatSlider->setup(20 * 10, 80);
+    floatSlider->setup(sideBarLayout->_width, 80);
     floatSlider->_color = ofColor(149,77,24);
+    floatSlider->_backgroundColor = ofColor(32, 255);
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
@@ -61,19 +67,22 @@ void ofApp::setup()
     // intDropDown->setup(sideBarLayout->_width, 50);
     // sideBarLayout->add(intDropDown);
 
+    auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
+    toggle->setup(sideBarLayout->_width, 40);
+    toggle->_color = ofColor(149,77,24);
+    toggle->_backgroundColor = ofColor(32, 255);
+    sideBarLayout->add(toggle);
+
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
     button->setup(sideBarLayout->_width, 20);
     button->_color = ofColor(149,77,24);
+    button->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(button);
-
-    auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
-    toggle->setup(sideBarLayout->_width, 40);
-    toggle->_color = ofColor(149,77,24);
-    sideBarLayout->add(toggle);
 
     auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_color);
     colorPicker->setup(sideBarLayout->_width, 40);
+    colorPicker->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(colorPicker);
 
 
@@ -175,5 +184,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 
 void ofApp::onTrigger()
 {
-    _upperShape->_color = ofColor(ofRandom(100, 255));
+    _upperShape->_color = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
 }

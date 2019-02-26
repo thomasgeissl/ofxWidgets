@@ -37,6 +37,7 @@ class slider : public ofxWidgets::widget
         _style = style::horizontal;
     }
     virtual void setup(int width, int height, bool hasOverlay = true){
+        _children.clear();
         widget::setup(width, height, hasOverlay);
 
         _label = ofxWidgets::label::create();
@@ -45,8 +46,8 @@ class slider : public ofxWidgets::widget
             _label->_position = glm::vec2(0, height/2);
         }else if(_style == style::vertical){
             auto sliderWidth = _width/10;
-            _label->setup(sliderWidth*9, sliderWidth);
-            _label->_position = glm::vec2(sliderWidth, (_height-sliderWidth)/2);
+            _label->setup(sliderWidth*8.5, sliderWidth);
+            _label->_position = glm::vec2(sliderWidth*1.5, (_height-sliderWidth)/2);
         }
         _label->_color = ofColor::white;
         add(_label);
@@ -57,11 +58,10 @@ class slider : public ofxWidgets::widget
     {
         if (_needsToBeRedrawn)
         {
-            widget::update();
             _label->_text = _value.getName() + ": " + ofToString(_value);
             _label->setNeedsToBeRedrawn(true);
+            widget::update();
             begin(false);
-            ofFill();
             if (_style == style::horizontal)
             {
                 ofSetColor(brigthenColor(_color, -.5));
@@ -80,9 +80,12 @@ class slider : public ofxWidgets::widget
             }
             else if (_style == style::rotary)
             {
-                // TODO
+                ofPolyline line;
+                line.arc(_width/2, _height/2,std::min(_width, _height),std::min(_width, _height),0,180);
+                ofSetColor(ofColor::red);
+                ofSetLineWidth(10);
+                line.draw();
             }
-            _label->draw();
             end();
         }
     }

@@ -37,20 +37,17 @@ class colorPicker : public ofxWidgets::widget
         _greenSlider->_color = ofColor(0, 255, 0);
         _blueSlider = ofxWidgets::intSlider::create(_blue);
         _blueSlider->_color = ofColor(0, 0, 255);
-        // _style = style::horizontal;
-        // _color = ofColor::darkGrey;
-        // _backgroundColor = ofColor::lightGrey;
     }
 
     colorPicker(ofParameter<ofColor> parameter) : widget(), _value(parameter)
     {
         _value.addListener(this, &colorPicker::onValueChange);
+        _red.set("red", _value.get().r, 0, 255);
         _red.addListener(this, &colorPicker::onComponentChange);
-        _red.set("red", 0, 0, 255);
+        _green.set("green", _value.get().g, 0, 255);
         _green.addListener(this, &colorPicker::onComponentChange);
-        _green.set("green", 0, 0, 255);
+        _blue.set("blue", _value.get().b, 0, 255);
         _blue.addListener(this, &colorPicker::onComponentChange);
-        _blue.set("blue", 0, 0, 255);
 
         _redSlider = ofxWidgets::intSlider::create(_red);
         _redSlider->_color = ofColor(255, 0, 0);
@@ -58,21 +55,19 @@ class colorPicker : public ofxWidgets::widget
         _greenSlider->_color = ofColor(0, 255, 0);
         _blueSlider = ofxWidgets::intSlider::create(_blue);
         _blueSlider->_color = ofColor(0, 0, 255);
-        // _style = style::horizontal;
-        // _color = ofColor::darkGrey;
-        // _backgroundColor = ofColor::lightGrey;
     }
 
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
-        widget::setup(width, height, hasOverlay);
         _children.clear();
+        widget::setup(width, height, hasOverlay);
         auto mainLayout = ofxWidgets::layout::hBox::create();
         auto leftLayout = ofxWidgets::layout::vBox::create();
         auto sliderLayout = ofxWidgets::layout::hBox::create();
         mainLayout->setup(_width, _height);
         leftLayout->setup(_width - height, _height);
         sliderLayout->setup(leftLayout->_width, leftLayout->_height / 2);
+        // sliderLayout->_horizontalOffset = sliderLayout->_width/20;
 
         _redSlider->setup(sliderLayout->_width / 3, sliderLayout->_height);
         sliderLayout->add(_redSlider);
@@ -81,7 +76,17 @@ class colorPicker : public ofxWidgets::widget
         _blueSlider->setup(_redSlider->_width, _redSlider->_height);
         sliderLayout->add(_blueSlider);
 
+        _redSlider->_label->_color = ofColor::white;
+        _greenSlider->_label->_color = ofColor::white;
+        _blueSlider->_label->_color = ofColor::white;
+
         leftLayout->add(sliderLayout);
+
+        _label = ofxWidgets::label::create();
+        _label->setup(leftLayout->_width, leftLayout->_height/2);
+        _label->_text = _value.getName();
+        _label->_color = ofColor::white;
+        leftLayout->add(_label);
         mainLayout->add(leftLayout);
         add(mainLayout);
     }
@@ -89,11 +94,10 @@ class colorPicker : public ofxWidgets::widget
     virtual void update()
     {
         setNeedsToBeRedrawn(true);
-        widget::update();
         if (_needsToBeRedrawn)
         {
+            widget::update();
             begin(false);
-            ofFill();
             ofSetColor(_value);
             ofDrawRectangle(_width - _height, 0, _height, _height);
             end();
@@ -104,6 +108,7 @@ class colorPicker : public ofxWidgets::widget
         widget::mousePressed(x, y, button);
         if (button == 0)
         {
+            // TODO: check if coloured square is hit and show overlay
         }
     }
     virtual void mouseDragged(int x, int y, int button)
@@ -119,12 +124,20 @@ class colorPicker : public ofxWidgets::widget
         _style = s;
         setNeedsToBeRedrawn(true);
     }
-    void setFontSize(int fontSize)
-    {
-        _fontSize = fontSize;
-    }
     void onValueChange(ofColor &value)
     {
+        if(_red != value.r){
+            _red.setWithoutEventNotifications(value.r);
+            _redSlider->setNeedsToBeRedrawn(true);
+        }
+        if(_green != value.g){
+            _green.setWithoutEventNotifications(value.g);
+            _greenSlider->setNeedsToBeRedrawn(true);
+        }
+        if(_blue != value.b){
+            _blue.setWithoutEventNotifications(value.b);
+            _blueSlider->setNeedsToBeRedrawn(true);
+        }
         setNeedsToBeRedrawn(true);
     }
     void onComponentChange(int &value)
@@ -140,5 +153,6 @@ class colorPicker : public ofxWidgets::widget
     ofParameter<int> _green;
     ofParameter<int> _blue;
     style _style;
+    ofxWidgets::label::pointer _label;
 };
 }; // namespace ofxWidgets
