@@ -23,6 +23,7 @@ void ofApp::setup()
     sideBarLayout->setup(sideBar);
     sideBarLayout->setup(mainLayout->_width / 5, mainLayout->_height);
     sideBarLayout->setName("sideBarLayout");
+    sideBarLayout->_verticalOffset = 10;
 
 
     auto sideBarHeading = ofxWidgets::label::create();
@@ -51,14 +52,14 @@ void ofApp::setup()
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
-    std::vector<ofxWidgets::intDropDown::option> options;
-    options.push_back(ofxWidgets::intDropDown::createOption(0, "none"));
-    options.push_back(ofxWidgets::intDropDown::createOption(1, "small"));
-    options.push_back(ofxWidgets::intDropDown::createOption(2, "medium"));
-    options.push_back(ofxWidgets::intDropDown::createOption(3, "large"));
-    auto intDropDown = ofxWidgets::intDropDown::create(_intDropDownValue, options);
-    intDropDown->setup(sideBarLayout->_width, 50);
-    sideBarLayout->add(intDropDown);
+    // std::vector<ofxWidgets::intDropDown::option> options;
+    // options.push_back(ofxWidgets::intDropDown::createOption(0, "none"));
+    // options.push_back(ofxWidgets::intDropDown::createOption(1, "small"));
+    // options.push_back(ofxWidgets::intDropDown::createOption(2, "medium"));
+    // options.push_back(ofxWidgets::intDropDown::createOption(3, "large"));
+    // auto intDropDown = ofxWidgets::intDropDown::create(_intDropDownValue, options);
+    // intDropDown->setup(sideBarLayout->_width, 50);
+    // sideBarLayout->add(intDropDown);
 
     _trigger.set("trigger");
     auto button = ofxWidgets::button::create(_trigger);
@@ -71,6 +72,9 @@ void ofApp::setup()
     toggle->_color = ofColor(149,77,24);
     sideBarLayout->add(toggle);
 
+    auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_color);
+    colorPicker->setup(sideBarLayout->_width, 40);
+    sideBarLayout->add(colorPicker);
 
 
     sideBar->add(sideBarLayout);
@@ -124,6 +128,17 @@ void ofApp::draw()
 
 void ofApp::keyPressed(int key)
 {
+    switch(key){
+        case 's':{
+            ofImage img;
+            img.grabScreen(0, 0 , ofGetWidth(), ofGetHeight());
+            img.save("screenshot.png");
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
 void ofApp::keyReleased(int key)

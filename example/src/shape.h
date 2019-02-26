@@ -15,13 +15,13 @@ class shape : public ofxWidgets::widget
     {
         _color = ofColor::purple;
         _boost.set("boost", false);
+        _position.set("position", glm::vec2(0, 0), glm::vec2(-1, -1), glm::vec2(1, 1));
     }
 
     void update()
     {
         widget::update();
-
-        begin();
+        begin(false);
         ofSetColor(_color);
         if (_boost)
         {
@@ -40,5 +40,6 @@ class shape : public ofxWidgets::widget
         end();
         setNeedsToBeRedrawn();
     }
+    ofParameter<glm::vec2> _position;
     ofParameter<bool> _boost;
 };
