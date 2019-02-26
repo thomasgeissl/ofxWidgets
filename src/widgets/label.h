@@ -51,11 +51,11 @@ class label : public ofxWidgets::widget
             }
             else if (_alignment == alignment::center)
             {
-                _ttf.drawString(_text, _width / 2 - width / 2, _fontSize);
+                _ttf.drawString(_text, _contentWidth / 2 - width / 2, _fontSize);
             }
             else
             {
-                _ttf.drawString(_text, _width - width, _fontSize);
+                _ttf.drawString(_text, _contentWidth - width, _fontSize);
             }
             end();
         }

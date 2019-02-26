@@ -30,7 +30,7 @@ class toggle : public ofxWidgets::widget
         widget::setup(width, height, hasOverlay);
         _label = ofxWidgets::label::create();
         _label->_text = _value.getName();
-        _label->setup(_width, height/2);
+        _label->setup(_contentWidth, height/2);
         _label->_position = glm::vec2(0, height/2);
         _label->_color = ofColor::white;
         add(_label);
@@ -47,16 +47,16 @@ class toggle : public ofxWidgets::widget
             _label->setNeedsToBeRedrawn(true);
             widget::update();
             begin(false);
-            float offset = _height * 0.05;
-            float height = _height - 2 * offset;
+            float offset = _contentHeight * 0.05;
+            float height = _contentHeight - 2 * offset;
             height /= 2;
-            float width = _width/2 - 2 * offset;
+            float width = _contentWidth/2 - 2 * offset;
             float x = offset;
             float y = offset;
             if (_value)
             {
                 ofSetColor(_color);
-                ofDrawRectangle(_width/2 + x , y, width, height);
+                ofDrawRectangle(_contentWidth/2 + x , y, width, height);
             }
             else
             {
@@ -65,7 +65,7 @@ class toggle : public ofxWidgets::widget
             }
             ofNoFill();
             ofSetLineWidth(1);
-            ofDrawRectangle(x, y, _width - 2 * offset, height);
+            ofDrawRectangle(x, y, _contentWidth - 2 * offset, height);
             ofFill();
             _label->draw();
             end();

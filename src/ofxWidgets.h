@@ -3,6 +3,7 @@
 #include "./gui.h"
 #include "./layouts/hBox.h"
 #include "./layouts/vBox.h"
+#include "./layouts/panel.h"
 #include "./widgets/widget.h"
 #include "./widgets/label.h"
 #include "./widgets/slider.h"

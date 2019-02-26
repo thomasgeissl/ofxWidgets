@@ -25,7 +25,7 @@ class hBox : public ofxWidgets::layout::box
         if (_children.size() > 0)
         {
             auto pos = _children.back()->_position;
-            auto width = _children.back()->_width;
+            auto width = _children.back()->_viewWidth;
             w->_position = pos + glm::vec2(width, 0);
         }
         widget::add(w);

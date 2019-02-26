@@ -24,7 +24,7 @@ class list : public ofxWidgets::widget
         {
             widget::setup(width, height, hasOverlay);
             _label = ofxWidgets::label::create(_value);
-            _label->setup(_width, _height);
+            _label->setup(_contentWidth, _contentHeight);
             add(_label);
         }
         virtual void setAlignment(alignment a)
@@ -66,7 +66,7 @@ class list : public ofxWidgets::widget
         layout->setup(width, height);
         for (auto listItem : _listItems)
         {
-            listItem->setup(layout->_width, (layout->_height - _listItems.size() * 2) / _listItems.size());
+            listItem->setup(layout->getContentWidth(), (layout->getContentHeight() - _listItems.size() * 2) / _listItems.size());
             layout->add(listItem);
         }
         add(layout);

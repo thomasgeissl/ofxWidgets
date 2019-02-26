@@ -36,18 +36,22 @@ class slider : public ofxWidgets::widget
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
     }
-    virtual void setup(int width, int height, bool hasOverlay = true){
+    virtual void setup(int width, int height, bool hasOverlay = true)
+    {
         _children.clear();
         widget::setup(width, height, hasOverlay);
 
         _label = ofxWidgets::label::create();
-        if(_style == style::horizontal){
-            _label->setup(_width, height/2);
-            _label->_position = glm::vec2(0, height/2);
-        }else if(_style == style::vertical){
-            auto sliderWidth = _width/10;
-            _label->setup(sliderWidth*8.5, sliderWidth);
-            _label->_position = glm::vec2(sliderWidth*1.5, (_height-sliderWidth)/2);
+        if (_style == style::horizontal)
+        {
+            _label->setup(_contentWidth, height / 2);
+            _label->_position = glm::vec2(0, height / 2);
+        }
+        else if (_style == style::vertical)
+        {
+            auto sliderWidth = _contentWidth / 10;
+            _label->setup(sliderWidth * 8.5, sliderWidth);
+            _label->_position = glm::vec2(sliderWidth * 1.5, (_contentHeight - sliderWidth) / 2);
         }
         _label->_color = ofColor::white;
         add(_label);
@@ -65,23 +69,23 @@ class slider : public ofxWidgets::widget
             if (_style == style::horizontal)
             {
                 ofSetColor(brigthenColor(_color, -.5));
-                ofDrawRectangle(0, 0, _width, _height/2);
+                ofDrawRectangle(0, 0, _contentWidth, _contentHeight / 2);
                 ofSetColor(_color);
-                ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _width), _height/2);
+                ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _contentWidth), _contentHeight / 2);
             }
             else if (_style == style::vertical)
             {
                 ofSetColor(brigthenColor(_color, -.5));
-                auto sliderWidth = _width/10;
-                ofDrawRectangle(0, 0, sliderWidth, _height);
+                auto sliderWidth = _contentWidth / 10;
+                ofDrawRectangle(0, 0, sliderWidth, _contentHeight);
                 ofSetColor(_color);
-                auto height = ofMap(_value, _value.getMin(), _value.getMax(), 0, _height);
-                ofDrawRectangle(0, _height - height, sliderWidth, height);
+                auto height = ofMap(_value, _value.getMin(), _value.getMax(), 0, _contentHeight);
+                ofDrawRectangle(0, _contentHeight - height, sliderWidth, height);
             }
             else if (_style == style::rotary)
             {
                 ofPolyline line;
-                line.arc(_width/2, _height/2,std::min(_width, _height),std::min(_width, _height),0,180);
+                line.arc(_contentWidth / 2, _contentHeight / 2, std::min(_contentWidth, _contentHeight), std::min(_contentWidth, _contentHeight), 0, 180);
                 ofSetColor(ofColor::red);
                 ofSetLineWidth(10);
                 line.draw();
@@ -97,11 +101,11 @@ class slider : public ofxWidgets::widget
         {
             if (_style == style::horizontal)
             {
-                _value = ofMap(x, 0, _width, _value.getMin(), _value.getMax());
+                _value = ofMap(x, 0, _contentWidth, _value.getMin(), _value.getMax());
             }
             else if (_style == style::vertical)
             {
-                _value = ofMap(_height - y, 0, _height, _value.getMin(), _value.getMax());
+                _value = ofMap(_contentHeight - y, 0, _contentHeight, _value.getMin(), _value.getMax());
             }
             else if (_style == style::rotary)
             {
@@ -116,11 +120,11 @@ class slider : public ofxWidgets::widget
         {
             if (_style == style::horizontal)
             {
-                _value = ofMap(x, 0, _width, _value.getMin(), _value.getMax());
+                _value = ofMap(x, 0, _contentWidth, _value.getMin(), _value.getMax());
             }
             else if (_style == style::vertical)
             {
-                _value = ofMap(_height - y, 0, _height, _value.getMin(), _value.getMax());
+                _value = ofMap(_contentHeight - y, 0, _contentHeight, _value.getMin(), _value.getMax());
             }
             else if (_style == style::rotary)
             {
@@ -132,7 +136,7 @@ class slider : public ofxWidgets::widget
     void setStyle(style s)
     {
         _style = s;
-        setup(_width, _height, _hasOverlay);
+        setup(_viewWidth, _viewHeight, _hasOverlay);
         setNeedsToBeRedrawn(true);
     }
     void setFontSize(int fontSize)
@@ -144,9 +148,7 @@ class slider : public ofxWidgets::widget
         setNeedsToBeRedrawn(true);
     }
 
-    ofTrueTypeFont _ttf;
     ofParameter<T> _value;
-    ofParameter<int> _fontSize;
     style _style;
 
     ofxWidgets::label::pointer _label;

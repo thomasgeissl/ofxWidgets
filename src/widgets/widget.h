@@ -60,10 +60,13 @@ class widget
     {
         _children.clear();
         _needsToBeRedrawn = true;
-        _width = width;
-        _height = height;
+        _contentWidth = width;
+        _contentHeight = height;
+        _viewWidth = width;
+        _viewHeight = height;
         _hasOverlay = hasOverlay;
-        _fbo.allocate(_width, _height, GL_RGBA);
+        _contentFbo.allocate(_viewWidth, _viewHeight, GL_RGBA);
+        _viewFbo.allocate(_viewWidth, _viewHeight, GL_RGBA);
         if (hasOverlay)
         {
             setupOverlay();
@@ -72,12 +75,12 @@ class widget
 
     virtual void setup(pointer other, bool hasOverlay = true)
     {
-        setup(other->_width, other->_height, hasOverlay);
+        setup(other->_viewWidth, other->_viewHeight, hasOverlay);
     }
     virtual void setupOverlay()
     {
         _overlay = ofxWidgets::widget::create();
-        _overlay->setup(_width, _height, false);
+        _overlay->setup(_viewWidth, _viewHeight, false);
     }
 
     void setName(std::string name)
@@ -139,9 +142,10 @@ class widget
         ofNoFill();
         ofSetColor(_borderColor);
         ofSetLineWidth(_borderWidth);
-        ofDrawRectangle(0, 0, _width, _height);
+        ofDrawRectangle(0, 0, _viewWidth, _viewHeight);
 
         end();
+
         setNeedsToBeRedrawn();
     }
     virtual void updateOverlay()
@@ -149,12 +153,19 @@ class widget
     }
     void draw()
     {
-        _fbo.draw(_position);
+        if(_contentWidth > _viewWidth || _contentHeight > _viewHeight){
+            ofLogNotice() << "TODO: scroll";
+        }
+        _contentFbo.draw(_position);
+        // _viewFbo.begin();
+        // ofClear(255);
+        // _contentFbo.draw(-_scrollPosition.x, -_scrollPosition.y);
+        // _viewFbo.end();
         setNeedsToBeRedrawn(false);
     }
     void draw(glm::vec2 position)
     {
-        _fbo.draw(position);
+        _contentFbo.draw(position);
     }
     void drawOverlay(glm::vec2 position)
     {
@@ -266,16 +277,16 @@ class widget
     }
     virtual void resized(int w, int h)
     {
-        auto xFactor = (float)(w) / _width;
-        auto yFactor = (float)(h) / _height;
-        _width = w;
-        _height = h;
-        _fbo.allocate(_width, _height, GL_RGBA);
+        auto xFactor = (float)(w) / _viewWidth;
+        auto yFactor = (float)(h) / _viewHeight;
+        _viewWidth = w;
+        _viewHeight = h;
+        _contentFbo.allocate(_viewWidth, _viewHeight, GL_RGBA);
         setNeedsToBeRedrawn(true);
 
         for (auto &child : _children)
         {
-            child->resized((float)(child->_width) * xFactor, (float)(child->_height) * yFactor);
+            child->resized((float)(child->_viewWidth) * xFactor, (float)(child->_viewHeight) * yFactor);
             child->_position *= glm::vec2(xFactor, yFactor);
         }
     }
@@ -283,6 +294,27 @@ class widget
     virtual void add(pointer w)
     {
         _children.push_back(std::move(w));
+        float mostRight = _viewWidth;
+        float mostBottom = _viewHeight;
+        for(auto & child : _children){
+            mostRight = std::max(mostRight, child->_position.x + child->getViewWidth());
+            mostBottom = std::max(mostBottom, child->_position.y + child->getViewHeight());
+        }
+        _contentWidth = mostRight;
+        _contentHeight = mostBottom;
+    }
+
+    virtual int getContentWidth(){
+        return _contentWidth;
+    }
+    virtual int getViewWidth(){
+        return _viewWidth;
+    }
+    virtual int getContentHeight(){
+        return _contentHeight;
+    }
+    virtual int getViewHeight(){
+        return _viewHeight;
     }
 
     virtual void setFontSize(int fontSize)
@@ -306,7 +338,7 @@ class widget
     {
         ofPushMatrix();
         ofPushStyle();
-        _fbo.begin();
+        _contentFbo.begin();
         if (clear)
         {
             // ofClear(255, 0);
@@ -315,7 +347,7 @@ class widget
     }
     void end()
     {
-        _fbo.end();
+        _contentFbo.end();
         ofPopStyle();
         ofPopMatrix();
     }
@@ -325,9 +357,9 @@ class widget
         pointer w = nullptr;
         if (_overlay != nullptr && _overlayVisible &&
             x > _overlay->_position.x &&
-            x < _overlay->_position.x + _overlay->_width &&
+            x < _overlay->_position.x + _overlay->_viewWidth &&
             y > _overlay->_position.y &&
-            y < _overlay->_position.y + _overlay->_height)
+            y < _overlay->_position.y + _overlay->_viewHeight)
         {
             return _overlay;
         }
@@ -336,8 +368,8 @@ class widget
         // }
         for (auto &child : _children)
         {
-            if ((x > child->_position.x && x < child->_position.x + child->_width) &&
-                (y > child->_position.y && y < child->_position.y + child->_height))
+            if ((x > child->_position.x && x < child->_position.x + child->_viewWidth) &&
+                (y > child->_position.y && y < child->_position.y + child->_viewHeight))
             {
                 w = child;
             }
@@ -390,16 +422,20 @@ class widget
 
     bool _needsToBeRedrawn;
     bool _hasOverlay;
-    ofFbo _fbo;
+    ofFbo _contentFbo;
+    ofFbo _viewFbo;
     glm::vec2 _position;
+    glm::vec2 _scrollPosition;
     std::vector<pointer> _children;
     pointer _overlay;
 
     bool _overlayVisible = false;
 
     std::string _name;
-    int _width;
-    int _height;
+    int _viewWidth;
+    int _viewHeight;
+    int _contentWidth;
+    int _contentHeight;
     ofParameter<bool> _focussed;
     ofParameter<bool> _hovered;
     ofParameter<bool> _pressed;

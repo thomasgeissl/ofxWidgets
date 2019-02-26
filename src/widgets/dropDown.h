@@ -30,7 +30,7 @@ class dropDown : public ofxWidgets::widget
             for (auto &opt : _options)
             {
                 ofSetColor(ofColor::lightGrey);
-                ofDrawRectangle(0, y, _width, 18);
+                ofDrawRectangle(0, y, _contentWidth, 18);
                 ofSetColor(ofColor::black);
                 _ttf.drawString(opt.second, 0, y + 20);
                 y += 20;
@@ -66,7 +66,7 @@ class dropDown : public ofxWidgets::widget
     {
         _overlay = overlay::create(_value, _options);
         auto height = _options.size() * 20;
-        _overlay->setup(_width, height, false);
+        _overlay->setup(_contentWidth, height, false);
     }
     virtual void update()
     {
@@ -76,7 +76,7 @@ class dropDown : public ofxWidgets::widget
             begin();
             ofFill();
             ofSetColor(ofColor::purple);
-            ofDrawRectangle(0, 0, _width, _height);
+            ofDrawRectangle(0, 0, _contentWidth, _contentHeight);
             end();
         }
 

@@ -9,9 +9,6 @@ namespace ofxWidgets
 class colorPicker : public ofxWidgets::widget
 {
   public:
-    enum style
-    {
-    };
     typedef std::shared_ptr<colorPicker> pointer;
     static pointer create()
     {
@@ -64,16 +61,16 @@ class colorPicker : public ofxWidgets::widget
         auto mainLayout = ofxWidgets::layout::hBox::create();
         auto leftLayout = ofxWidgets::layout::vBox::create();
         auto sliderLayout = ofxWidgets::layout::hBox::create();
-        mainLayout->setup(_width, _height);
-        leftLayout->setup(_width - height, _height);
-        sliderLayout->setup(leftLayout->_width, leftLayout->_height / 2);
+        mainLayout->setup(_contentWidth, _contentHeight);
+        leftLayout->setup(_contentWidth - height, _contentHeight);
+        sliderLayout->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         // sliderLayout->_horizontalOffset = sliderLayout->_width/20;
 
-        _redSlider->setup(sliderLayout->_width / 3, sliderLayout->_height);
+        _redSlider->setup(sliderLayout->getContentWidth() / 3, sliderLayout->getContentHeight());
         sliderLayout->add(_redSlider);
-        _greenSlider->setup(_redSlider->_width, _redSlider->_height);
+        _greenSlider->setup(_redSlider->getContentWidth(), _redSlider->getContentHeight());
         sliderLayout->add(_greenSlider);
-        _blueSlider->setup(_redSlider->_width, _redSlider->_height);
+        _blueSlider->setup(_redSlider->getContentWidth(), _redSlider->getContentHeight());
         sliderLayout->add(_blueSlider);
 
         _redSlider->_label->_color = ofColor::white;
@@ -83,7 +80,7 @@ class colorPicker : public ofxWidgets::widget
         leftLayout->add(sliderLayout);
 
         _label = ofxWidgets::label::create();
-        _label->setup(leftLayout->_width, leftLayout->_height/2);
+        _label->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         _label->_text = _value.getName();
         _label->_color = ofColor::white;
         leftLayout->add(_label);
@@ -99,7 +96,7 @@ class colorPicker : public ofxWidgets::widget
             widget::update();
             begin(false);
             ofSetColor(_value);
-            ofDrawRectangle(_width - _height, 0, _height, _height);
+            ofDrawRectangle(_contentWidth - _contentHeight, 0, _contentHeight, _contentHeight);
             end();
         }
     }
@@ -119,22 +116,20 @@ class colorPicker : public ofxWidgets::widget
         }
     }
 
-    void setStyle(style s)
-    {
-        _style = s;
-        setNeedsToBeRedrawn(true);
-    }
     void onValueChange(ofColor &value)
     {
-        if(_red != value.r){
+        if (_red != value.r)
+        {
             _red.setWithoutEventNotifications(value.r);
             _redSlider->setNeedsToBeRedrawn(true);
         }
-        if(_green != value.g){
+        if (_green != value.g)
+        {
             _green.setWithoutEventNotifications(value.g);
             _greenSlider->setNeedsToBeRedrawn(true);
         }
-        if(_blue != value.b){
+        if (_blue != value.b)
+        {
             _blue.setWithoutEventNotifications(value.b);
             _blueSlider->setNeedsToBeRedrawn(true);
         }
@@ -152,7 +147,6 @@ class colorPicker : public ofxWidgets::widget
     ofParameter<int> _red;
     ofParameter<int> _green;
     ofParameter<int> _blue;
-    style _style;
     ofxWidgets::label::pointer _label;
 };
 }; // namespace ofxWidgets

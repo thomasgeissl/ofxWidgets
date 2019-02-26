@@ -19,21 +19,18 @@ class button : public ofxWidgets::widget
     button() : widget()
     {
         _color = ofColor::lightGrey;
-        setFontSize(16);
     }
     button(ofParameter<void> parameter) : _trigger(parameter)
     {
         _color = ofColor::lightGrey;
-        setFontSize(16);
         _label = ofxWidgets::label::create();
         _label->_text = parameter.getName();
         _label->setAlignment(ofxWidgets::widget::alignment::center);
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
-        _children.clear();
         widget::setup(width, height, hasOverlay);
-        _label->setup(_width, _height);
+        _label->setup(_contentWidth, _contentHeight);
     }
 
     virtual void update()
@@ -51,7 +48,7 @@ class button : public ofxWidgets::widget
             {
                 ofSetColor(brigthenColor(_color, -0.5));
             }
-            ofDrawRectangle(0, 0, _width, _height);
+            ofDrawRectangle(0, 0, _contentWidth, _contentHeight);
             _label->draw();
 
             if (_hovered)
@@ -59,7 +56,7 @@ class button : public ofxWidgets::widget
                 ofNoFill();
                 ofSetColor(brigthenColor(_color, -0.25));
                 ofSetLineWidth(1);
-                ofDrawRectangle(0, 0, _width, _height);
+                ofDrawRectangle(0, 0, _contentWidth, _contentHeight);
             }
             end();
         }

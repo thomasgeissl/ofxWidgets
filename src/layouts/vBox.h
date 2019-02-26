@@ -24,7 +24,7 @@ class vBox : public ofxWidgets::layout::box
         if (_children.size() > 0)
         {
             auto pos = _children.back()->_position;
-            auto height = _children.back()->_height + _verticalOffset;
+            auto height = _children.back()->_viewHeight + _verticalOffset;
             w->_position = pos + glm::vec2(0, height);
         }
         widget::add(w);
