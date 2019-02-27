@@ -15,6 +15,11 @@ class widget
         top,
         bottom
     };
+    enum orientation
+    {
+        horizontal,
+        vertical
+    };
     static ofColor brigthenColor(ofColor color, float amount)
     {
         auto brightness = color.getBrightness();
@@ -43,12 +48,12 @@ class widget
         _color.set("color", ofColor::lightGrey);
         _backgroundColor.set("backgroundColor", ofColor(255, 0));
 
-        _fontSize = 32;
 
         // border
         _borderColor.set("borderColor", ofColor(255, 0));
         _borderWidth.set("borderWidth", 0, 0, 100);
 
+        _fontSize = 32;
         ofTrueTypeFontSettings settings("Roboto-Light.ttf", _fontSize);
         settings.contours = false;
         settings.antialiased = true;
@@ -146,6 +151,23 @@ class widget
 
         end();
 
+        if(!contentFitsInView()){
+            _viewFbo.begin();
+            ofClear(255, 0);
+            _contentFbo.getTexture().drawSubsection(0, 0, _viewWidth, _viewHeight, _scrollPosition.x, _scrollPosition.y);
+
+            // draw scrollbars
+            // if(_hovered){
+            ofFill();
+            ofSetColor(ofColor::darkGrey);
+            ofDrawRectangle(_viewWidth - 10, 0, 10, _viewHeight);
+            ofSetColor(ofColor::lightGrey);
+            auto verticalLength = _viewHeight * _viewHeight/_contentHeight;
+            ofDrawRectangle(_viewWidth - 10, _scrollPosition.y, 10, verticalLength);
+            // ofDrawRectangle(0, _viewHeight - 10, _viewWidth, 10);
+            _viewFbo.end();
+        }
+
         setNeedsToBeRedrawn();
     }
     virtual void updateOverlay()
@@ -153,14 +175,11 @@ class widget
     }
     void draw()
     {
-        if(_contentWidth > _viewWidth || _contentHeight > _viewHeight){
-            ofLogNotice() << "TODO: scroll";
+        if(contentFitsInView()){
+            _contentFbo.draw(_position);
+        }else{
+            _viewFbo.draw(_position);
         }
-        _contentFbo.draw(_position);
-        // _viewFbo.begin();
-        // ofClear(255);
-        // _contentFbo.draw(-_scrollPosition.x, -_scrollPosition.y);
-        // _viewFbo.end();
         setNeedsToBeRedrawn(false);
     }
     void draw(glm::vec2 position)
@@ -200,40 +219,45 @@ class widget
         {
             for (auto &child : _children)
             {
-                child->mouseExited(x - child->_position.x, y - child->_position.y);
+                child->mouseExited(x - child->_position.x + _scrollPosition.x, y - child->_position.y + _scrollPosition.y);
             }
-            mouseEntered(x, y);
+            mouseEntered(x + _scrollPosition.x, y + _scrollPosition.y);
         }
         else
         {
-            auto w = getWidgetAtPosition(x, y);
+            auto w = getWidgetAtPosition(x + _scrollPosition.x, y + _scrollPosition.y);
             if (w != nullptr)
             {
                 return;
-                w->mouseMoved(x - w->_position.x, y - w->_position.y);
+                w->mouseMoved(x - w->_position.x + _scrollPosition.x, y - w->_position.y + _scrollPosition.y);
             }
         }
     }
     virtual void mouseDragged(int x, int y, int button)
     {
-        auto w = getWidgetAtPosition(x, y);
+        auto w = getWidgetAtPosition(x + _scrollPosition.x, y + _scrollPosition.y);
         if (w != nullptr)
         {
-            w->mouseDragged(x - w->_position.x, y - w->_position.y, button);
+            w->mouseDragged(x - w->_position.x + _scrollPosition.x, y - w->_position.y + _scrollPosition.y, button);
         }
     }
     virtual void mousePressed(int x, int y, int button)
     {
+        if(!contentFitsInView() && x > _viewWidth - 10){
+            auto pos = (float)(y) / _viewHeight * _contentHeight;
+            setScrollPosition(_scrollPosition.x, pos);
+            return;
+        }
         auto focussedWidget = getFocussedWidget();
         if (focussedWidget != nullptr)
         {
             focussedWidget->setFocus(false);
         }
-        auto w = getWidgetAtPosition(x, y);
+        auto w = getWidgetAtPosition(x + _scrollPosition.x, y + _scrollPosition.y);
         if (w != nullptr)
         {
             w->setFocus(true);
-            w->mousePressed(x - w->_position.x, y - w->_position.y, button);
+            w->mousePressed(x - w->_position.x + _scrollPosition.x, y - w->_position.y + _scrollPosition.y, button);
         }
         else
         {
@@ -242,10 +266,10 @@ class widget
     }
     virtual void mouseReleased(int x, int y, int button)
     {
-        auto w = getWidgetAtPosition(x, y);
+        auto w = getWidgetAtPosition(x + _scrollPosition.x, y + _scrollPosition.y);
         if (w != nullptr)
         {
-            w->mouseReleased(x - w->_position.x, y - w->_position.y, button);
+            w->mouseReleased(x - w->_position.x - _scrollPosition.x, y - w->_position.y - _scrollPosition.y, button);
         }
         else
         {
@@ -254,10 +278,10 @@ class widget
     }
     virtual void mouseEntered(int x, int y)
     {
-        auto w = getWidgetAtPosition(x, y);
+        auto w = getWidgetAtPosition(x + _scrollPosition.x, y + _scrollPosition.y);
         if (w != nullptr)
         {
-            w->mouseEntered(x - w->_position.x, y - w->_position.y);
+            w->mouseEntered(x - w->_position.x + _scrollPosition.x, y - w->_position.y + _scrollPosition.y);
         }
         else
         {
@@ -272,7 +296,7 @@ class widget
         setNeedsToBeRedrawn(true);
         for (auto &child : _children)
         {
-            child->mouseExited(x - child->_position.x, y - child->_position.y);
+            child->mouseExited(x - child->_position.x + _scrollPosition.x, y - child->_position.y + _scrollPosition.y);
         }
     }
     virtual void resized(int w, int h)
@@ -317,6 +341,19 @@ class widget
         return _viewHeight;
     }
 
+    void setScrollPosition(float x, float y){
+        if(x >= 0 && x <= _contentHeight - _viewHeight){
+            _scrollPosition.x = x;
+        }else{
+            _scrollPosition.x = _contentWidth - _viewWidth;
+        }
+        if(y >= 0 && y <= _contentHeight - _viewHeight){
+            _scrollPosition.y = y;
+        }else{
+            _scrollPosition.y = _contentHeight - _viewHeight;
+        }
+        setNeedsToBeRedrawn(true);
+    }
     virtual void setFontSize(int fontSize)
     {
         _fontSize = fontSize;
@@ -418,6 +455,10 @@ class widget
     void onPressedChange(bool &value)
     {
         setNeedsToBeRedrawn(true);
+    }
+
+    bool contentFitsInView(){
+        return (_contentWidth <= _viewWidth && _contentHeight <= _viewHeight);
     }
 
     bool _needsToBeRedrawn;
