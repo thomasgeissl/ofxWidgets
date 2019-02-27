@@ -32,5 +32,11 @@ public:
   ofParameter<int> _intDropDownValue;
   ofParameter<int> _testListIndex;
 
+  ofParameterGroup _panelParameters;
+  ofParameter<void> _panelVoidParameter;
+  ofParameter<bool> _panelBoolParameter;
+  ofParameter<int> _panelIntParameter;
+  ofParameter<float> _panelFloatParameter;
+
   void onTrigger();
 };

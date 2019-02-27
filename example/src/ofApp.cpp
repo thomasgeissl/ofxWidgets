@@ -7,6 +7,15 @@ void ofApp::setup()
     ofSetVerticalSync(true);
 
 
+    _panelVoidParameter.set("trigger");
+    _panelBoolParameter.set("activate", false);
+    _panelIntParameter.set("int value", 0, 0, 100);
+    _panelFloatParameter.set("float value", 0, 0, 1);
+    _panelParameters.add(_panelVoidParameter);
+    _panelParameters.add(_panelBoolParameter);
+    _panelParameters.add(_panelIntParameter);
+    _panelParameters.add(_panelFloatParameter);
+
     _upperShape = shape::create();
     _lowerShape = shape::create();
 
@@ -154,6 +163,16 @@ void ofApp::setup()
 
     sideBarLayout->add(smallWidget);
     smallWidgetLayout->_scrollPosition.y = 20;
+
+    // auto sideBarSubHeadingPanel = ofxWidgets::label::create();
+    // sideBarSubHeadingPanel->setup(sideBarLayout->getViewWidth(), 40);
+    // sideBarSubHeadingPanel->setText("Panel");
+    // sideBarSubHeadingPanel->_backgroundColor = ofColor(255, 0);
+    // sideBarLayout->add(sideBarSubHeadingPanel);
+
+    // auto panel = ofxWidgets::panel::create(_panelParameters);
+    // panel->setup(sideBarLayout->getViewWidth(), 200);
+    // sideBarLayout->add(panel);
 }
 
 void ofApp::update()

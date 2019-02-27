@@ -378,7 +378,6 @@ class widget
         _contentFbo.begin();
         if (clear)
         {
-            // ofClear(255, 0);
             ofClear(_backgroundColor);
         }
     }
@@ -387,6 +386,10 @@ class widget
         _contentFbo.end();
         ofPopStyle();
         ofPopMatrix();
+    }
+
+    bool contentFitsInView(){
+        return (_contentWidth <= _viewWidth && _contentHeight <= _viewHeight);
     }
 
     pointer getWidgetAtPosition(float x, float y)
@@ -457,9 +460,8 @@ class widget
         setNeedsToBeRedrawn(true);
     }
 
-    bool contentFitsInView(){
-        return (_contentWidth <= _viewWidth && _contentHeight <= _viewHeight);
-    }
+    std::vector<pointer> _children;
+    pointer _overlay;
 
     bool _needsToBeRedrawn;
     bool _hasOverlay;
@@ -467,8 +469,7 @@ class widget
     ofFbo _viewFbo;
     glm::vec2 _position;
     glm::vec2 _scrollPosition;
-    std::vector<pointer> _children;
-    pointer _overlay;
+
 
     bool _overlayVisible = false;
 
