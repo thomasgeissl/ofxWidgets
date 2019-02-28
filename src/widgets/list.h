@@ -53,9 +53,15 @@ class list : public ofxWidgets::widget
             listItem->_color = ofColor::lightGrey;
             _listItems.push_back(listItem);
         }
+        init();
     }
     list() : widget()
     {
+        init();
+    }
+    void init()
+    {
+        _type = TYPE_OFXWIDGET_LIST;
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
@@ -77,18 +83,22 @@ class list : public ofxWidgets::widget
         auto counter = 0;
         auto isAnItemPressed = false;
         auto pressedItem = -1;
-        for(auto & item : _listItems){
-            if(item->_pressed){
+        for (auto &item : _listItems)
+        {
+            if (item->_pressed)
+            {
                 isAnItemPressed = true;
                 pressedItem = counter;
             }
             counter++;
         }
         counter = 0;
-        if(isAnItemPressed){
+        if (isAnItemPressed)
+        {
             _currentIndex = pressedItem;
             ofLogNotice() << "index changed " << _currentIndex;
-            for(auto & item : _listItems){
+            for (auto &item : _listItems)
+            {
                 item->_selected = counter == pressedItem;
             }
             counter++;

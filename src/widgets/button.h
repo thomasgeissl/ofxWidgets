@@ -16,15 +16,18 @@ class button : public ofxWidgets::widget
     {
         return std::make_shared<button>(parameter);
     }
-    button() : widget()
+    button() : widget(), _label(ofxWidgets::label::create())
     {
-        _color = ofColor::lightGrey;
+        init();
     }
-    button(ofParameter<void> parameter) : _trigger(parameter)
+    button(ofParameter<void> parameter) : widget(), _label(ofxWidgets::label::create()), _trigger(parameter)
     {
+        init();
+    }
+    void init(){
+        _type = TYPE_OFXWIDGET_BUTTON;
         _color = ofColor::lightGrey;
-        _label = ofxWidgets::label::create();
-        _label->_text = parameter.getName();
+        _label->_text = _trigger.getName();
         _label->setAlignment(ofxWidgets::widget::alignment::center);
     }
     virtual void setup(int width, int height, bool hasOverlay = true)

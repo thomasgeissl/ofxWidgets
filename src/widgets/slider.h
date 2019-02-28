@@ -26,16 +26,21 @@ class slider : public ofxWidgets::widget
     }
     slider() : widget()
     {
-        _value.set("value", 0, 0, 100);
-        _value.addListener(this, &slider::onValueChange);
-        _style = style::horizontal;
+        init();
     }
 
     slider(ofParameter<T> parameter) : widget(), _value(parameter)
     {
+        init();
+    }
+
+    void init()
+    {
+        _type = TYPE_OFXWIDGET_SLIDER;
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
     }
+
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
         _children.clear();

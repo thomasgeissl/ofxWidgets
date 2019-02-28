@@ -173,6 +173,13 @@ void ofApp::setup()
     // auto panel = ofxWidgets::panel::create(_panelParameters);
     // panel->setup(sideBarLayout->getViewWidth(), 200);
     // sideBarLayout->add(panel);
+
+    ofJson theme;
+    ofFile file("themes/default.json");
+    file >> theme;
+    _gui.setTheme(theme);
+    sideBar->_backgroundColor = ofColor(24, 255);
+    content->_backgroundColor = ofColor(48, 255);
 }
 
 void ofApp::update()

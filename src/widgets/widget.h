@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "../defines.h"
 
 namespace ofxWidgets
 {
@@ -34,6 +35,7 @@ class widget
     }
     widget()
     {
+        _type = TYPE_OFXWIDGET_BASE;
         _pressed.addListener(this, &widget::onPressedChange);
         _pressed.set("pressed", false);
         _hovered.set("hovered", false);
@@ -47,7 +49,6 @@ class widget
 
         _color.set("color", ofColor::lightGrey);
         _backgroundColor.set("backgroundColor", ofColor(255, 0));
-
 
         // border
         _borderColor.set("borderColor", ofColor(255, 0));
@@ -151,7 +152,8 @@ class widget
 
         end();
 
-        if(!contentFitsInView()){
+        if (!contentFitsInView())
+        {
             _viewFbo.begin();
             ofClear(255, 0);
             _contentFbo.getTexture().drawSubsection(0, 0, _viewWidth, _viewHeight, _scrollPosition.x, _scrollPosition.y);
@@ -162,7 +164,7 @@ class widget
             ofSetColor(ofColor::darkGrey);
             ofDrawRectangle(_viewWidth - 10, 0, 10, _viewHeight);
             ofSetColor(ofColor::lightGrey);
-            auto verticalLength = _viewHeight * _viewHeight/_contentHeight;
+            auto verticalLength = _viewHeight * _viewHeight / _contentHeight;
             ofDrawRectangle(_viewWidth - 10, _scrollPosition.y, 10, verticalLength);
             // ofDrawRectangle(0, _viewHeight - 10, _viewWidth, 10);
             _viewFbo.end();
@@ -175,9 +177,12 @@ class widget
     }
     void draw()
     {
-        if(contentFitsInView()){
+        if (contentFitsInView())
+        {
             _contentFbo.draw(_position);
-        }else{
+        }
+        else
+        {
             _viewFbo.draw(_position);
         }
         setNeedsToBeRedrawn(false);
@@ -243,7 +248,8 @@ class widget
     }
     virtual void mousePressed(int x, int y, int button)
     {
-        if(!contentFitsInView() && x > _viewWidth - 10){
+        if (!contentFitsInView() && x > _viewWidth - 10)
+        {
             auto pos = (float)(y) / _viewHeight * _contentHeight;
             setScrollPosition(_scrollPosition.x, pos);
             return;
@@ -320,7 +326,8 @@ class widget
         _children.push_back(std::move(w));
         float mostRight = _viewWidth;
         float mostBottom = _viewHeight;
-        for(auto & child : _children){
+        for (auto &child : _children)
+        {
             mostRight = std::max(mostRight, child->_position.x + child->getViewWidth());
             mostBottom = std::max(mostBottom, child->_position.y + child->getViewHeight());
         }
@@ -328,28 +335,39 @@ class widget
         _contentHeight = mostBottom;
     }
 
-    virtual int getContentWidth(){
+    virtual int getContentWidth()
+    {
         return _contentWidth;
     }
-    virtual int getViewWidth(){
+    virtual int getViewWidth()
+    {
         return _viewWidth;
     }
-    virtual int getContentHeight(){
+    virtual int getContentHeight()
+    {
         return _contentHeight;
     }
-    virtual int getViewHeight(){
+    virtual int getViewHeight()
+    {
         return _viewHeight;
     }
 
-    void setScrollPosition(float x, float y){
-        if(x >= 0 && x <= _contentHeight - _viewHeight){
+    void setScrollPosition(float x, float y)
+    {
+        if (x >= 0 && x <= _contentHeight - _viewHeight)
+        {
             _scrollPosition.x = x;
-        }else{
+        }
+        else
+        {
             _scrollPosition.x = _contentWidth - _viewWidth;
         }
-        if(y >= 0 && y <= _contentHeight - _viewHeight){
+        if (y >= 0 && y <= _contentHeight - _viewHeight)
+        {
             _scrollPosition.y = y;
-        }else{
+        }
+        else
+        {
             _scrollPosition.y = _contentHeight - _viewHeight;
         }
         setNeedsToBeRedrawn(true);
@@ -388,7 +406,8 @@ class widget
         ofPopMatrix();
     }
 
-    bool contentFitsInView(){
+    bool contentFitsInView()
+    {
         return (_contentWidth <= _viewWidth && _contentHeight <= _viewHeight);
     }
 
@@ -460,6 +479,34 @@ class widget
         setNeedsToBeRedrawn(true);
     }
 
+    virtual void setTheme(ofJson theme)
+    {
+        if (theme.find("widgets") != theme.end())
+        {
+            if (theme["widgets"].find(_type) != theme["widgets"].end())
+            {
+                int r = theme["widgets"][_type]["color"]["r"];
+                int g = theme["widgets"][_type]["color"]["g"];
+                int b = theme["widgets"][_type]["color"]["b"];
+                int a = theme["widgets"][_type]["color"]["a"];
+                _color = ofColor(r, g, b, a);
+                r = theme["widgets"][_type]["backgroundColor"]["r"];
+                g = theme["widgets"][_type]["backgroundColor"]["g"];
+                b = theme["widgets"][_type]["backgroundColor"]["b"];
+                a = theme["widgets"][_type]["backgroundColor"]["a"];
+                _backgroundColor = ofColor(r, g, b, a);
+                for (auto &child : _children)
+                {
+                    bool value = theme["widgets"][_type]["applyToChildren"];
+                    if (value)
+                    {
+                        child->setTheme(theme);
+                    }
+                }
+            }
+        }
+    }
+
     std::vector<pointer> _children;
     pointer _overlay;
 
@@ -469,7 +516,6 @@ class widget
     ofFbo _viewFbo;
     glm::vec2 _position;
     glm::vec2 _scrollPosition;
-
 
     bool _overlayVisible = false;
 
@@ -497,5 +543,8 @@ class widget
     ofParameter<float> _borderWidth;
 
     static ofParameter<bool> _debug;
+
+    ofJson _theme;
+    std::string _type;
 };
 }; // namespace ofxWidgets

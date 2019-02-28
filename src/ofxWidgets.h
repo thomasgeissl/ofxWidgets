@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./gui.h"
+#include "./defines.h"
 #include "./layouts/hBox.h"
 #include "./layouts/vBox.h"
 #include "./widgets/widget.h"

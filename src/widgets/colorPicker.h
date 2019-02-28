@@ -18,25 +18,17 @@ class colorPicker : public ofxWidgets::widget
     {
         return std::make_shared<colorPicker>(parameter);
     }
-    colorPicker() : widget()
+    colorPicker() : widget(), _label(ofxWidgets::label::create())
     {
-        _value.set("value", ofColor::black);
-        _value.addListener(this, &colorPicker::onValueChange);
-        _red.addListener(this, &colorPicker::onComponentChange);
-        _red.set("red", 0, 0, 255);
-        _green.addListener(this, &colorPicker::onComponentChange);
-        _green.set("green", 0, 0, 255);
-        _blue.addListener(this, &colorPicker::onComponentChange);
-        _blue.set("blue", 0, 0, 255);
-        _redSlider = ofxWidgets::intSlider::create(_red);
-        _redSlider->_color = ofColor(255, 0, 0);
-        _greenSlider = ofxWidgets::intSlider::create(_green);
-        _greenSlider->_color = ofColor(0, 255, 0);
-        _blueSlider = ofxWidgets::intSlider::create(_blue);
-        _blueSlider->_color = ofColor(0, 0, 255);
+        _value.set("color", ofColor::black);
+        init();
     }
 
-    colorPicker(ofParameter<ofColor> parameter) : widget(), _value(parameter)
+    colorPicker(ofParameter<ofColor> parameter) : widget(), _value(parameter), _label(ofxWidgets::label::create())
+    {
+        init();
+    }
+    void init()
     {
         _value.addListener(this, &colorPicker::onValueChange);
         _red.set("red", _value.get().r, 0, 255);
@@ -47,10 +39,11 @@ class colorPicker : public ofxWidgets::widget
         _blue.addListener(this, &colorPicker::onComponentChange);
 
         _redSlider = ofxWidgets::intSlider::create(_red);
-        _redSlider->_color = ofColor(255, 0, 0);
         _greenSlider = ofxWidgets::intSlider::create(_green);
-        _greenSlider->_color = ofColor(0, 255, 0);
         _blueSlider = ofxWidgets::intSlider::create(_blue);
+
+        _redSlider->_color = ofColor(255, 0, 0);
+        _greenSlider->_color = ofColor(0, 255, 0);
         _blueSlider->_color = ofColor(0, 0, 255);
     }
 
@@ -79,7 +72,6 @@ class colorPicker : public ofxWidgets::widget
 
         leftLayout->add(sliderLayout);
 
-        _label = ofxWidgets::label::create();
         _label->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         _label->_text = _value.getName();
         _label->_color = ofColor::white;

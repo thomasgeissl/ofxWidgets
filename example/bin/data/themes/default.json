@@ -1,0 +1,24 @@
+{
+    "widgets": {
+        "TYPE_OFXWIDGETS_BASE": {
+            "applyToChildren": true,
+            "color": {"r": 149, "g": 77, "b": 24, "a": 255},
+            "backgroundColor": {"r": 32, "g": 32, "b": 32, "a": 255}
+        },
+        "TYPE_OFXWIDGETS_LAYOUT": {
+            "applyToChildren": true,
+            "color": {"r": 0, "g": 0, "b": 0, "a": 0},
+            "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 0}
+        },
+        "TYPE_OFXWIDGETS_GUI": {
+            "applyToChildren": true,
+            "color": {"r": 149, "g": 77, "b": 24, "a": 255},
+            "backgroundColor": {"r": 24, "g": 24, "b": 24, "a": 255}
+        },
+        "TYPE_OFXWIDGETS_LABEL": {
+            "applyToChildren": true,
+            "color": {"r": 200, "g": 200, "b": 200, "a": 255},
+            "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 0}
+        }
+    }
+}

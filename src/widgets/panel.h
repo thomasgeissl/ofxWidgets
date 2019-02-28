@@ -55,12 +55,17 @@ class panel : public ofxWidgets::widget
             }
         }
     }
+    void init()
+    {
+        _type = TYPE_OFXWIDGET_PANEL;
+    }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
         widget::setup(width, height, hasOverlay);
         _layout->setup(_viewWidth, _viewHeight, hasOverlay);
-        for(auto & child : _layout->_children){
-            child->setup(_layout->getViewWidth(), _layout->getViewHeight()/_layout->_children.size(), hasOverlay);
+        for (auto &child : _layout->_children)
+        {
+            child->setup(_layout->getViewWidth(), _layout->getViewHeight() / _layout->_children.size(), hasOverlay);
         }
         add(_layout);
     }

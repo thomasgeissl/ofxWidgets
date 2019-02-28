@@ -18,12 +18,15 @@ class label : public ofxWidgets::widget
     }
     label() : widget()
     {
-        ofTrueTypeFont::setGlobalDpi(72);
-        _fontSize = 32;
-        _text.addListener(this, &label::onTextChange);
+        init();
     }
     label(ofParameter<std::string> parameter) : widget(), _text(parameter)
     {
+        init();
+    }
+    void init()
+    {
+        ofTrueTypeFont::setGlobalDpi(72);
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);
     }

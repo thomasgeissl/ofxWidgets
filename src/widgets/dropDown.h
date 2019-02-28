@@ -54,12 +54,15 @@ class dropDown : public ofxWidgets::widget
     }
     dropDown() : widget()
     {
-        _currentIndex = 0;
+        init();
     }
 
     dropDown(ofParameter<T> value, std::vector<option> options) : widget(), _value(value), _options(options)
     {
-        _currentIndex = 0;
+        init();
+    }
+    void init()
+    {
     }
 
     virtual void setupOverlay()
