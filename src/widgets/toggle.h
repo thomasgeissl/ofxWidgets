@@ -26,7 +26,7 @@ class toggle : public ofxWidgets::widget
     }
     void init()
     {
-        _type = TYPE_OFXWIDGET_TOGGLE;
+        _type = TYPE_OFXWIDGETS_TOGGLE;
         _value.addListener(this, &toggle::onValueChange);
     }
 

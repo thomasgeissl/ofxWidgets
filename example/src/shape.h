@@ -13,7 +13,7 @@ class shape : public ofxWidgets::widget
     }
     shape()
     {
-        _color = ofColor::purple;
+        _fillColor = ofColor::purple;
         _boost.set("boost", false);
         _shapePosition.set("position", glm::vec2(0, 0), glm::vec2(-1, -1), glm::vec2(1, 1));
     }
@@ -22,7 +22,7 @@ class shape : public ofxWidgets::widget
     {
         widget::update();
         begin(false);
-        ofSetColor(_color);
+        ofSetColor(_fillColor);
         if (_boost)
         {
             ofDrawCircle(_contentWidth / 2 + std::sin(ofGetElapsedTimef() * 10) * 20, _contentHeight / 2 + std::cos(ofGetElapsedTimef() * 10) * 20, 50);
@@ -42,4 +42,5 @@ class shape : public ofxWidgets::widget
     }
     ofParameter<glm::vec2> _shapePosition;
     ofParameter<bool> _boost;
+    ofParameter<ofColor> _fillColor;
 };

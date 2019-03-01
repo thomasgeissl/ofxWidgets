@@ -25,7 +25,7 @@ class button : public ofxWidgets::widget
         init();
     }
     void init(){
-        _type = TYPE_OFXWIDGET_BUTTON;
+        _type = TYPE_OFXWIDGETS_BUTTON;
         _color = ofColor::lightGrey;
         _label->_text = _trigger.getName();
         _label->setAlignment(ofxWidgets::widget::alignment::center);

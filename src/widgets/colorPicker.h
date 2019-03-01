@@ -30,6 +30,7 @@ class colorPicker : public ofxWidgets::widget
     }
     void init()
     {
+        _type = TYPE_OFXWIDGETS_COLORPICKER;
         _value.addListener(this, &colorPicker::onValueChange);
         _red.set("red", _value.get().r, 0, 255);
         _red.addListener(this, &colorPicker::onComponentChange);
@@ -66,15 +67,11 @@ class colorPicker : public ofxWidgets::widget
         _blueSlider->setup(_redSlider->getContentWidth(), _redSlider->getContentHeight());
         sliderLayout->add(_blueSlider);
 
-        _redSlider->_label->_color = ofColor::white;
-        _greenSlider->_label->_color = ofColor::white;
-        _blueSlider->_label->_color = ofColor::white;
-
         leftLayout->add(sliderLayout);
 
         _label->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         _label->_text = _value.getName();
-        _label->_color = ofColor::white;
+        // _label->_color = ofColor::white;
         leftLayout->add(_label);
         mainLayout->add(leftLayout);
         add(mainLayout);

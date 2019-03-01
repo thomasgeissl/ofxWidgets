@@ -35,7 +35,7 @@ class widget
     }
     widget()
     {
-        _type = TYPE_OFXWIDGET_BASE;
+        _type = TYPE_OFXWIDGETS_BASE;
         _pressed.addListener(this, &widget::onPressedChange);
         _pressed.set("pressed", false);
         _hovered.set("hovered", false);
@@ -481,28 +481,44 @@ class widget
 
     virtual void setTheme(ofJson theme)
     {
-        if (theme.find("widgets") != theme.end())
+        std::string key = TYPE_OFXWIDGETS_BASE;
+        if (theme.find(_type) != theme.end())
         {
-            if (theme["widgets"].find(_type) != theme["widgets"].end())
+            key = _type;
+        }
+
+        if (theme.find(key) != theme.end())
+        {
+            if (theme[key].find("color") != theme[key].end())
             {
-                int r = theme["widgets"][_type]["color"]["r"];
-                int g = theme["widgets"][_type]["color"]["g"];
-                int b = theme["widgets"][_type]["color"]["b"];
-                int a = theme["widgets"][_type]["color"]["a"];
+                int r = theme[key]["color"]["r"];
+                int g = theme[key]["color"]["g"];
+                int b = theme[key]["color"]["b"];
+                int a = theme[key]["color"]["a"];
                 _color = ofColor(r, g, b, a);
-                r = theme["widgets"][_type]["backgroundColor"]["r"];
-                g = theme["widgets"][_type]["backgroundColor"]["g"];
-                b = theme["widgets"][_type]["backgroundColor"]["b"];
-                a = theme["widgets"][_type]["backgroundColor"]["a"];
+            }
+            if (theme[key].find("backgroundColor") != theme[key].end())
+            {
+                int r = theme[key]["backgroundColor"]["r"];
+                int g = theme[key]["backgroundColor"]["g"];
+                int b = theme[key]["backgroundColor"]["b"];
+                int a = theme[key]["backgroundColor"]["a"];
                 _backgroundColor = ofColor(r, g, b, a);
-                for (auto &child : _children)
-                {
-                    bool value = theme["widgets"][_type]["applyToChildren"];
-                    if (value)
-                    {
-                        child->setTheme(theme);
-                    }
-                }
+            }
+        }
+
+        if (theme.find(key) != theme.end() && theme[key].find("children") != theme[key].end())
+        {
+            for (auto &child : _children)
+            {
+                child->setTheme(theme[key]["children"]);
+            }
+        }
+        else
+        {
+            for (auto &child : _children)
+            {
+                child->setTheme(theme);
             }
         }
     }

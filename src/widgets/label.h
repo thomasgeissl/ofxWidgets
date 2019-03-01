@@ -26,6 +26,7 @@ class label : public ofxWidgets::widget
     }
     void init()
     {
+        _type = TYPE_OFXWIDGETS_LABEL;
         ofTrueTypeFont::setGlobalDpi(72);
         _fontSize = 32;
         _text.addListener(this, &label::onTextChange);

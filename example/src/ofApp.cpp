@@ -6,7 +6,6 @@ void ofApp::setup()
     ofEnableAntiAliasing();
     ofSetVerticalSync(true);
 
-
     _panelVoidParameter.set("trigger");
     _panelBoolParameter.set("activate", false);
     _panelIntParameter.set("int value", 0, 0, 100);
@@ -17,11 +16,9 @@ void ofApp::setup()
     _panelParameters.add(_panelFloatParameter);
 
     _upperShape = shape::create();
-    _lowerShape = shape::create();
 
     // # main
     _gui.setName("gui");
-    _gui._backgroundColor = ofColor(64, 255);
     auto mainLayout = ofxWidgets::layout::hBox::create();
     mainLayout->setup(_gui.getViewWidth(), _gui.getViewHeight());
     _gui.add(mainLayout);
@@ -31,7 +28,6 @@ void ofApp::setup()
     auto sideBarWidth = (int)(mainLayout->getViewWidth() / 5);
     sideBar->setup(sideBarWidth, mainLayout->getViewHeight());
     sideBar->setName("sideBar");
-    sideBar->_backgroundColor = ofColor(24,255);
 
     auto sideBarLayout = ofxWidgets::layout::vBox::create();
     sideBarLayout->setup(sideBar);
@@ -57,15 +53,11 @@ void ofApp::setup()
 
     auto intSlider = ofxWidgets::intSlider::create(_intValue);
     intSlider->setup(sideBarLayout->getViewWidth(), 40);
-    intSlider->_color = ofColor(149,77,24);
-    intSlider->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(intSlider);
 
     auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
     floatSlider->setup(20 * 10, 80);
     floatSlider->setup(sideBarLayout->getViewWidth(), 80);
-    floatSlider->_color = ofColor(149,77,24);
-    floatSlider->_backgroundColor = ofColor(32, 255);
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
@@ -78,20 +70,16 @@ void ofApp::setup()
     // intDropDown->setup(sideBarLayout->_width, 50);
     // sideBarLayout->add(intDropDown);
 
-    auto toggle = ofxWidgets::toggle::create(_lowerShape->_boost);
+    auto toggle = ofxWidgets::toggle::create(_upperShape->_boost);
     toggle->setup(sideBarLayout->getViewWidth(), 40);
-    toggle->_color = ofColor(149,77,24);
-    toggle->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(toggle);
 
     _trigger.set("randomise");
     auto button = ofxWidgets::button::create(_trigger);
     button->setup(sideBarLayout->getViewWidth(), 20);
-    button->_color = ofColor(149,77,24);
-    button->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(button);
 
-    auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_color);
+    auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor);
     colorPicker->setup(sideBarLayout->getViewWidth(), 40);
     colorPicker->_backgroundColor = ofColor(32, 255);
     sideBarLayout->add(colorPicker);
@@ -111,10 +99,8 @@ void ofApp::setup()
     contentLayout->setName("contentLayout");
 
     _upperShape->setup(contentLayout->getViewWidth(), contentLayout->getViewHeight() / 5);
-    _lowerShape->setup(contentLayout->getViewWidth(), contentLayout->getViewHeight() / 5);
 
     contentLayout->add(_upperShape);
-    contentLayout->add(_lowerShape);
 
     content->add(contentLayout);
     mainLayout->add(content);
@@ -140,7 +126,6 @@ void ofApp::setup()
     auto sideBarSubHeadingScroll = ofxWidgets::label::create();
     sideBarSubHeadingScroll->setup(sideBarLayout->getViewWidth(), 40);
     sideBarSubHeadingScroll->setText("Scrollable");
-    sideBarSubHeadingScroll->_backgroundColor = ofColor(255, 0);
     sideBarLayout->add(sideBarSubHeadingScroll);
 
     auto smallWidget = ofxWidgets::widget::create();
@@ -151,14 +136,10 @@ void ofApp::setup()
 
     auto newIntSlider = ofxWidgets::intSlider::create(_intValue);
     newIntSlider->setup(smallWidgetLayout->getViewWidth(), 60);
-    newIntSlider->_color = ofColor(149,77,24);
-    newIntSlider->_backgroundColor = ofColor(32, 255);
     smallWidgetLayout->add(newIntSlider);
 
-    auto newColorPicker = ofxWidgets::colorPicker::create(_upperShape->_color);
+    auto newColorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor);
     newColorPicker->setup(smallWidgetLayout->getViewWidth(), 40);
-    newColorPicker->_color = ofColor(149,77,24);
-    newColorPicker->_backgroundColor = ofColor(32, 255);
     smallWidgetLayout->add(newColorPicker);
 
     sideBarLayout->add(smallWidget);
@@ -167,7 +148,6 @@ void ofApp::setup()
     // auto sideBarSubHeadingPanel = ofxWidgets::label::create();
     // sideBarSubHeadingPanel->setup(sideBarLayout->getViewWidth(), 40);
     // sideBarSubHeadingPanel->setText("Panel");
-    // sideBarSubHeadingPanel->_backgroundColor = ofColor(255, 0);
     // sideBarLayout->add(sideBarSubHeadingPanel);
 
     // auto panel = ofxWidgets::panel::create(_panelParameters);
@@ -240,5 +220,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 
 void ofApp::onTrigger()
 {
-    _upperShape->_color = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
+    _upperShape->_fillColor = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
 }

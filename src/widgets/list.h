@@ -61,7 +61,7 @@ class list : public ofxWidgets::widget
     }
     void init()
     {
-        _type = TYPE_OFXWIDGET_LIST;
+        _type = TYPE_OFXWIDGETS_LIST;
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {

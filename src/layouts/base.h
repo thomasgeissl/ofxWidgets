@@ -16,6 +16,13 @@ public:
   {
     return std::make_shared<base>();
   }
+  base() : widget()
+  {
+    init();
+  }
+  void init(){
+    _type = TYPE_OFXWIDGETS_LAYOUT;
+  }
   virtual void recalculatePositions()
   {
   }

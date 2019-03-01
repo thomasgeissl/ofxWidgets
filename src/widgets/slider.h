@@ -36,7 +36,7 @@ class slider : public ofxWidgets::widget
 
     void init()
     {
-        _type = TYPE_OFXWIDGET_SLIDER;
+        _type = TYPE_OFXWIDGETS_SLIDER;
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
     }

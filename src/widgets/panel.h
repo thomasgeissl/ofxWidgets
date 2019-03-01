@@ -57,7 +57,7 @@ class panel : public ofxWidgets::widget
     }
     void init()
     {
-        _type = TYPE_OFXWIDGET_PANEL;
+        _type = TYPE_OFXWIDGETS_PANEL;
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
