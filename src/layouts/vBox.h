@@ -11,12 +11,13 @@ class vBox : public ofxWidgets::layout::box
 {
   public:
     typedef std::shared_ptr<vBox> pointer;
-    static pointer create()
+    static pointer create(int width, int height)
     {
-        return std::make_shared<vBox>();
+        return std::make_shared<vBox>(width, height);
     }
-    vBox(){
-        _verticalOffset.set("verticalOffset", 0, 0, 1024*4);
+    vBox(int width, int height) : box(width, height)
+    {
+        _verticalOffset.set("verticalOffset", 0, 0, 1024 * 4);
         _verticalOffset.addListener(this, &vBox::offsetChanged);
     }
     virtual void add(ofxWidgets::widget::pointer w)
@@ -29,7 +30,8 @@ class vBox : public ofxWidgets::layout::box
         }
         widget::add(w);
     }
-    void offsetChanged(float & value){
+    void offsetChanged(float &value)
+    {
         recalculatePositions();
     }
 

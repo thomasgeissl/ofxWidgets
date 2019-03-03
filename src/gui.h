@@ -13,7 +13,7 @@ class gui : public widget
     {
         return std::make_shared<gui>();
     }
-    gui(bool registerEventListeners = true, bool registerDrawEventListener = true){
+    gui(bool registerEventListeners = true, bool registerDrawEventListener = true) : widget(ofGetWidth(), ofGetHeight()){
         if(registerEventListeners){
             ofAddListener(ofEvents().setup, this, &gui::onSetup, OF_EVENT_ORDER_BEFORE_APP);
             ofAddListener(ofEvents().update, this, &gui::onUpdate);

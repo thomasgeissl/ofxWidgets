@@ -16,20 +16,21 @@ class slider : public ofxWidgets::widget
         rotary
     };
     typedef std::shared_ptr<slider> pointer;
-    static pointer create()
+    static pointer create(std::string text, T value, T min, T max, int width, int height)
     {
-        return std::make_shared<slider>();
+        return std::make_shared<slider>(text, value, min, max, width, height);
     }
     static pointer create(ofParameter<T> parameter)
     {
         return std::make_shared<slider>(parameter);
     }
-    slider() : widget()
+    slider(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal) : widget(width, height), style(s)
     {
+        _value.set(text, value, min, max);
         init();
     }
 
-    slider(ofParameter<T> parameter) : widget(), _value(parameter)
+    slider(ofParameter<T> parameter, int width, int height, style s = style::horizontal) : widget(width, height), _value(parameter), _style(s)
     {
         init();
     }
@@ -39,28 +40,23 @@ class slider : public ofxWidgets::widget
         _type = TYPE_OFXWIDGETS_SLIDER;
         _value.addListener(this, &slider::onValueChange);
         _style = style::horizontal;
-    }
 
-    virtual void setup(int width, int height, bool hasOverlay = true)
-    {
-        _children.clear();
-        widget::setup(width, height, hasOverlay);
-
-        _label = ofxWidgets::label::create();
         if (_style == style::horizontal)
         {
-            _label->setup(_contentWidth, height / 2);
-            _label->_position = glm::vec2(0, height / 2);
+            _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 2);
+            _label->_position = glm::vec2(0, _contentHeight / 2);
         }
         else if (_style == style::vertical)
         {
             auto sliderWidth = _contentWidth / 10;
-            _label->setup(sliderWidth * 8.5, sliderWidth);
+            _label = ofxWidgets::label::create(_value.getName(), sliderWidth * 8.5, sliderWidth);
             _label->_position = glm::vec2(sliderWidth * 1.5, (_contentHeight - sliderWidth) / 2);
+        }
+        else if (_style == style::rotary)
+        {
         }
         _label->_color = ofColor::white;
         add(_label);
-        setNeedsToBeRedrawn(true);
     }
 
     virtual void update()

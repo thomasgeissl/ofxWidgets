@@ -8,26 +8,27 @@ class button : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<button> pointer;
-    static pointer create()
+    static pointer create(std::string text, int width, int height)
     {
-        return std::make_shared<button>();
+        return std::make_shared<button>(text, width, height);
     }
-    static pointer create(ofParameter<void> parameter)
+    static pointer create(ofParameter<void> parameter, int width, int height)
     {
-        return std::make_shared<button>(parameter);
+        return std::make_shared<button>(parameter, width, height);
     }
-    button() : widget(), _label(ofxWidgets::label::create())
+    button(std::string text, int width, int height) : widget(width, height)
     {
+        _trigger.setName("text");
         init();
     }
-    button(ofParameter<void> parameter) : widget(), _label(ofxWidgets::label::create()), _trigger(parameter)
+    button(ofParameter<void> parameter, int width, int height) : widget(width, height), _trigger(parameter)
     {
         init();
     }
     void init(){
         _type = TYPE_OFXWIDGETS_BUTTON;
         _color = ofColor::lightGrey;
-        _label->_text = _trigger.getName();
+        _label = ofxWidgets::label::create(_trigger.getName(), _contentWidth, _contentHeight);
         _label->setAlignment(ofxWidgets::widget::alignment::center);
     }
     virtual void setup(int width, int height, bool hasOverlay = true)

@@ -29,11 +29,11 @@ class widget
         return brightenedColor;
     }
     typedef std::shared_ptr<widget> pointer;
-    static pointer create()
+    static pointer create(int width, int height)
     {
-        return std::make_shared<widget>();
+        return std::make_shared<widget>(width, height);
     }
-    widget()
+    widget(int width, int height)
     {
         _type = TYPE_OFXWIDGETS_BASE;
         _pressed.addListener(this, &widget::onPressedChange);
@@ -60,11 +60,12 @@ class widget
         settings.antialiased = true;
         settings.simplifyAmt = 0;
         _ttf.load(settings);
+
+        setup(width, height);
     }
 
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
-        _children.clear();
         _needsToBeRedrawn = true;
         _contentWidth = width;
         _contentHeight = height;

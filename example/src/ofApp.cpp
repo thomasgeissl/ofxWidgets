@@ -19,6 +19,7 @@ void ofApp::setup()
 
     // # main
     _gui.setName("gui");
+    _gui.setup(ofGetWidth(), ofGetHeight());
     auto mainLayout = ofxWidgets::layout::hBox::create();
     mainLayout->setup(_gui.getViewWidth(), _gui.getViewHeight());
     _gui.add(mainLayout);
@@ -36,28 +37,19 @@ void ofApp::setup()
     sideBarLayout->_verticalOffset = 10;
 
 
-    auto sideBarHeading = ofxWidgets::label::create();
-    sideBarHeading->setup(sideBarLayout->getViewWidth(), 50);
-    sideBarHeading->setText("ofxWidgets Demo");
-    sideBarHeading->_backgroundColor = ofColor(255, 0);
+    auto sideBarHeading = ofxWidgets::label::create("ofxWidgets Demo", sideBarLayout->getViewWidth(), 50);
     sideBarLayout->add(sideBarHeading);
 
-    auto sideBarSubHeading = ofxWidgets::label::create();
-    sideBarSubHeading->setup(sideBarLayout->getViewWidth(), 40);
-    sideBarSubHeading->setText("Settings");
-    sideBarSubHeading->_backgroundColor = ofColor(255, 0);
+    auto sideBarSubHeading = ofxWidgets::label::create("Settings", sideBarLayout->getViewWidth(), 40);
     sideBarLayout->add(sideBarSubHeading);
 
     _intValue.set("int", 20, 0, 100);
     _floatValue.set("float", 0.5, 0, 1);
 
-    auto intSlider = ofxWidgets::intSlider::create(_intValue);
-    intSlider->setup(sideBarLayout->getViewWidth(), 40);
+    auto intSlider = ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 40);
     sideBarLayout->add(intSlider);
 
-    auto floatSlider = ofxWidgets::floatSlider::create(_floatValue);
-    floatSlider->setup(20 * 10, 80);
-    floatSlider->setup(sideBarLayout->getViewWidth(), 80);
+    auto floatSlider = ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80);
     floatSlider->setStyle(ofxWidgets::floatSlider::style::vertical);
     sideBarLayout->add(floatSlider);
 
@@ -70,18 +62,14 @@ void ofApp::setup()
     // intDropDown->setup(sideBarLayout->_width, 50);
     // sideBarLayout->add(intDropDown);
 
-    auto toggle = ofxWidgets::toggle::create(_upperShape->_boost);
-    toggle->setup(sideBarLayout->getViewWidth(), 40);
+    auto toggle = ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 40);
     sideBarLayout->add(toggle);
 
     _trigger.set("randomise");
-    auto button = ofxWidgets::button::create(_trigger);
-    button->setup(sideBarLayout->getViewWidth(), 20);
+    auto button = ofxWidgets::button::create(_trigger, sideBarLayout->getViewWidth(), 20);
     sideBarLayout->add(button);
 
-    auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor);
-    colorPicker->setup(sideBarLayout->getViewWidth(), 40);
-    colorPicker->_backgroundColor = ofColor(32, 255);
+    auto colorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor, sideBarLayout->getViewWidth(), 40);
     sideBarLayout->add(colorPicker);
 
 
@@ -89,10 +77,8 @@ void ofApp::setup()
     mainLayout->add(sideBar);
 
     // ## content
-    auto content = ofxWidgets::widget::create();
-    content->setup(mainLayout->getViewWidth() - sideBarWidth, mainLayout->getViewHeight());
+    auto content = ofxWidgets::widget::create(mainLayout->getViewWidth() - sideBarWidth, mainLayout->getViewHeight());
     content->setName("content");
-    content->_backgroundColor = _gui._backgroundColor;
 
     auto contentLayout = ofxWidgets::layout::vBox::create();
     contentLayout->setup(content);
@@ -134,12 +120,10 @@ void ofApp::setup()
     smallWidgetLayout->setup(smallWidget->getViewWidth(), smallWidget->getViewHeight());
     smallWidget->add(smallWidgetLayout);
 
-    auto newIntSlider = ofxWidgets::intSlider::create(_intValue);
-    newIntSlider->setup(smallWidgetLayout->getViewWidth(), 60);
+    auto newIntSlider = ofxWidgets::intSlider::create(_intValue, smallWidgetLayout->getViewWidth(), 60);
     smallWidgetLayout->add(newIntSlider);
 
-    auto newColorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor);
-    newColorPicker->setup(smallWidgetLayout->getViewWidth(), 40);
+    auto newColorPicker = ofxWidgets::colorPicker::create(_upperShape->_fillColor, smallWidgetLayout->getViewWidth(), 40);
     smallWidgetLayout->add(newColorPicker);
 
     sideBarLayout->add(smallWidget);

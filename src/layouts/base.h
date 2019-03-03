@@ -12,11 +12,11 @@ class base : public ofxWidgets::widget
 {
 public:
   typedef std::shared_ptr<base> pointer;
-  static pointer create()
+  static pointer create(int width, int height)
   {
-    return std::make_shared<base>();
+    return std::make_shared<base>(width, height);
   }
-  base() : widget()
+  base(int width, int height) : widget(width, height)
   {
     init();
   }

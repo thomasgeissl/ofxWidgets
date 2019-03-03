@@ -8,19 +8,20 @@ class toggle : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<toggle> pointer;
-    static pointer create()
+    static pointer create(std::string text, bool value, int width, int height)
     {
-        return std::make_shared<toggle>();
+        return std::make_shared<toggle>(text, value, width, height);
     }
-    static pointer create(ofParameter<bool> parameter)
+    static pointer create(ofParameter<bool> parameter, int width, int height)
     {
-        return std::make_shared<toggle>(parameter);
+        return std::make_shared<toggle>(parameter, width, height);
     }
-    toggle() : widget(), _label(ofxWidgets::label::create()), _checkedText("on"), _unCheckedText("off")
+    toggle(std::string text, bool value, int width, int height) : widget(width, height), _checkedText("on"), _unCheckedText("off")
     {
+        _value.set(text, value);
         init();
     }
-    toggle(ofParameter<bool> parameter) : widget(), _value(parameter), _label(ofxWidgets::label::create()), _checkedText("on"), _unCheckedText("off")
+    toggle(ofParameter<bool> parameter, int width, int height) : widget(width, height), _value(parameter), _checkedText("on"), _unCheckedText("off")
     {
         init();
     }
@@ -28,18 +29,12 @@ class toggle : public ofxWidgets::widget
     {
         _type = TYPE_OFXWIDGETS_TOGGLE;
         _value.addListener(this, &toggle::onValueChange);
-    }
 
-    virtual void setup(int width, int height, bool hasOverlay = true)
-    {
-        _children.clear();
-        widget::setup(width, height, hasOverlay);
-        _label->_text = _value.getName();
-        _label->setup(_contentWidth, height / 2);
+        _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 2);
         _label->_position = glm::vec2(0, height / 2);
-        _label->_color = ofColor::white;
         add(_label);
     }
+
     virtual void update()
     {
         if (_needsToBeRedrawn)
