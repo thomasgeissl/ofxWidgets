@@ -33,8 +33,9 @@ void ofApp::setup()
     auto contentLayout = ofxWidgets::layout::vBox::createAndAddTo(content);
     contentLayout->setName("contentLayout");
 
-    _upperShape = shape::create(contentLayout);
+    _upperShape = shape::create(contentLayout->getViewWidth(), contentLayout->getViewHeight()/2);
     contentLayout->add(_upperShape);
+    contentLayout->add(ofxWidgets::panel::create(_panelParameters, contentLayout->getViewWidth(), contentLayout->getViewHeight()/2));
 
 
     // ## sidebar

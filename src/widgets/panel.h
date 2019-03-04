@@ -23,38 +23,39 @@ class panel : public ofxWidgets::widget
     }
     panel(int width, int height) : widget(width, height)
     {
+        init();
     }
     panel(ofParameterGroup parameters, int width, int height) : widget(width, height), _layout(ofxWidgets::layout::vBox::create(width, height))
     {
+        // _layout = ofxWidgets::layout::vBox::createAndAddTo(std::make_shared<ofxWidgets::panel>(this));
+        _layout = ofxWidgets::layout::vBox::create(_viewWidth, _viewHeight);
+        add(_layout);
         for (auto &parameter : parameters)
         {
             auto type = parameter->type();
             if (type == "11ofParameterIvE")
             {
-                // auto widget = ofxWidgets::button::create(parameter->cast<void>());
-                // _layout->add(widget);
+                // TODO: height
+                _layout->add(ofxWidgets::button::create(parameter->cast<void>(), _layout->getViewWidth(), 50));
             }
             else if (type == "11ofParameterIbE")
             {
-                // auto widget = ofxWidgets::toggle::create(parameter->cast<bool>());
-                // _layout->add(widget);
+                _layout->add(ofxWidgets::toggle::create(parameter->cast<bool>(), _layout->getViewWidth(), 100));
             }
             else if (type == "11ofParameterIiE")
             {
-                // auto widget = ofxWidgets::intSlider::create(parameter->cast<int>());
-                // _layout->add(widget);
+                _layout->add(ofxWidgets::intSlider::create(parameter->cast<int>(), _layout->getViewWidth(), 100));
             }
             else if (type == "11ofParameterIfE")
             {
-                // auto widget = ofxWidgets::floatSlider::create(parameter->cast<float>());
-                // _layout->add(widget);
+                _layout->add(ofxWidgets::floatSlider::create(parameter->cast<float>(), _layout->getViewWidth(), 100));
             }
             else
             {
                 ofLogWarning("ofxWidgets") << "trying to add parameter to panel, but " << type << " is not (yet) supported";
             }
         }
-        add(_layout);
+        init();
     }
     void init()
     {
@@ -66,6 +67,7 @@ class panel : public ofxWidgets::widget
         _layout->add(w);
     }
 
+  protected:
     ofxWidgets::layout::vBox::pointer _layout;
 };
 }; // namespace ofxWidgets
