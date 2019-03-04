@@ -46,6 +46,7 @@ void ofApp::setup()
     sideBarLayout->add(ofxWidgets::label::create("Settings", sideBarLayout->getViewWidth(), 40));
     sideBarLayout->add(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 40));
     sideBarLayout->add(ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80, ofxWidgets::floatSlider::style::vertical));
+    sideBarLayout->add(ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80, ofxWidgets::floatSlider::style::rotary));
     sideBarLayout->add(ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 40));
     sideBarLayout->add(ofxWidgets::button::create(_trigger, sideBarLayout->getViewWidth(), 20));
     sideBarLayout->add(ofxWidgets::colorPicker::create(_upperShape->_fillColor, sideBarLayout->getViewWidth(), 40));
