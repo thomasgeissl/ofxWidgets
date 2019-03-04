@@ -22,7 +22,6 @@ public:
   void gotMessage(ofMessage msg);
 
   shape::pointer _upperShape;
-  shape::pointer _lowerShape;
   ofxWidgets::gui _gui;
   ofParameter<float> _value;
   ofParameter<void> _trigger;

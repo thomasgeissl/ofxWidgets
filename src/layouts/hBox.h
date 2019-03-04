@@ -11,12 +11,23 @@ class hBox : public ofxWidgets::layout::box
 {
   public:
     typedef std::shared_ptr<hBox> pointer;
-    static pointer create()
+    static pointer createAndAddTo(ofxWidgets::widget::pointer w)
     {
-        return std::make_shared<hBox>();
+        auto layout = create(w->getViewWidth(), w->getViewHeight());
+        w->add(layout);
+        return layout;
     }
-    hBox(){
-        _horizontalOffset.set("horizontalOffset", 0, 0, 1024*4);
+    static pointer create(ofxWidgets::widget::pointer w)
+    {
+        return create(w->getViewWidth(), w->getViewHeight());
+    }
+    static pointer create(int width, int height)
+    {
+        return std::make_shared<hBox>(width, height);
+    }
+    hBox(int width, int height) : box(width, height)
+    {
+        _horizontalOffset.set("horizontalOffset", 0, 0, 1024 * 4);
         _horizontalOffset.addListener(this, &hBox::offsetChanged);
     }
 
@@ -30,10 +41,10 @@ class hBox : public ofxWidgets::layout::box
         }
         widget::add(w);
     }
-    void offsetChanged(float & value){
+    void offsetChanged(float &value)
+    {
         recalculatePositions();
     }
-
 
     ofParameter<float> _horizontalOffset;
 };

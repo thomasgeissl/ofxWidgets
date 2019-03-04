@@ -10,8 +10,8 @@
 #include "./widgets/button.h"
 #include "./widgets/toggle.h"
 #include "./widgets/panel.h"
-#include "./widgets/dropDown.h"
-#include "./widgets/list.h"
+// #include "./widgets/dropDown.h"
+// #include "./widgets/list.h"
 #include "./widgets/colorPicker.h"
 
 namespace ofxYaga = ofxWidgets;

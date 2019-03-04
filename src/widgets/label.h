@@ -8,34 +8,37 @@ class label : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<label> pointer;
-    static pointer create()
+    static pointer create(std::string text, ofxWidgets::widget::pointer w)
     {
-        return std::make_shared<label>();
+        return create(text, w->getViewWidth(), w->getViewHeight());
     }
-    static pointer create(ofParameter<std::string> parameter)
+    static pointer create(ofParameter<std::string> text, ofxWidgets::widget::pointer w)
     {
-        return std::make_shared<label>(parameter);
+        return create(text, w->getViewWidth(), w->getViewHeight());
     }
-    label() : widget()
+    static pointer create(std::string text, int width, int height)
     {
+        return std::make_shared<label>(text, width, height);
+    }
+    static pointer create(ofParameter<std::string> parameter, int width, int height)
+    {
+        return std::make_shared<label>(parameter, width, height);
+    }
+    label(std::string text, int width, int height) : widget(width, height)
+    {
+        _value.set(text, text); // parameter name, value
         init();
     }
-    label(ofParameter<std::string> parameter) : widget(), _text(parameter)
+    label(ofParameter<std::string> parameter, int width, int height) : widget(width, height), _value(parameter)
     {
         init();
     }
     void init()
     {
+        _type = TYPE_OFXWIDGETS_LABEL;
         ofTrueTypeFont::setGlobalDpi(72);
-        _fontSize = 32;
-        _text.addListener(this, &label::onTextChange);
-    }
-    virtual void setup(int width, int height, bool hasOverlay = true)
-    {
-        _children.clear();
-        widget::setup(width, height, hasOverlay);
-        // TODO: calculate font size based on height and width
-        _fontSize = height * .8;
+        _fontSize = _contentHeight * .8;
+        _value.addListener(this, &label::onValueChange);
     }
 
     virtual void update()
@@ -46,32 +49,38 @@ class label : public ofxWidgets::widget
             begin(false);
             ofFill();
             ofSetColor(_color);
-            auto boundingBox = _ttf.getStringBoundingBox(_text, 0, 0);
+            auto boundingBox = _ttf.getStringBoundingBox(_value, 0, 0);
             auto width = boundingBox.getWidth();
             if (_alignment == alignment::left)
             {
-                _ttf.drawString(_text, 0, _fontSize);
+                _ttf.drawString(_value, 0, _fontSize);
             }
             else if (_alignment == alignment::center)
             {
-                _ttf.drawString(_text, _contentWidth / 2 - width / 2, _fontSize);
+                _ttf.drawString(_value, _contentWidth / 2 - width / 2, _fontSize);
             }
             else
             {
-                _ttf.drawString(_text, _contentWidth - width, _fontSize);
+                _ttf.drawString(_value, _contentWidth - width, _fontSize);
             }
             end();
         }
     }
-    void setText(std::string text)
-    {
-        _text = text;
-    }
-    void onTextChange(std::string &value)
+    void onValueChange(std::string &value)
     {
         setNeedsToBeRedrawn(true);
     }
 
-    ofParameter<std::string> _text;
+    void setValue(std::string value)
+    {
+        _value = value;
+    }
+    ofParameter<std::string> &getValue()
+    {
+        return _value;
+    }
+
+  protected:
+    ofParameter<std::string> _value;
 };
 }; // namespace ofxWidgets

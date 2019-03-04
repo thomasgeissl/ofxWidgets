@@ -7,13 +7,17 @@ class shape : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<shape> pointer;
-    static pointer create()
+    static pointer create(ofxWidgets::widget::pointer w)
     {
-        return std::make_shared<shape>();
+        return create(w->getContentWidth(), w->getContentHeight());
     }
-    shape()
+    static pointer create(int width, int height)
     {
-        _color = ofColor::purple;
+        return std::make_shared<shape>(width, height);
+    }
+    shape(int width, int height) : widget(width, height)
+    {
+        _fillColor = ofColor::purple;
         _boost.set("boost", false);
         _shapePosition.set("position", glm::vec2(0, 0), glm::vec2(-1, -1), glm::vec2(1, 1));
     }
@@ -21,8 +25,8 @@ class shape : public ofxWidgets::widget
     void update()
     {
         widget::update();
-        begin(false);
-        ofSetColor(_color);
+        begin();
+        ofSetColor(_fillColor);
         if (_boost)
         {
             ofDrawCircle(_contentWidth / 2 + std::sin(ofGetElapsedTimef() * 10) * 20, _contentHeight / 2 + std::cos(ofGetElapsedTimef() * 10) * 20, 50);
@@ -42,4 +46,5 @@ class shape : public ofxWidgets::widget
     }
     ofParameter<glm::vec2> _shapePosition;
     ofParameter<bool> _boost;
+    ofParameter<ofColor> _fillColor;
 };

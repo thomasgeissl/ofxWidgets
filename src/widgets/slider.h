@@ -16,71 +16,64 @@ class slider : public ofxWidgets::widget
         rotary
     };
     typedef std::shared_ptr<slider> pointer;
-    static pointer create()
+    static pointer create(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal)
     {
-        return std::make_shared<slider>();
+        return std::make_shared<slider>(text, value, min, max, width, height, s);
     }
-    static pointer create(ofParameter<T> parameter)
+    static pointer create(ofParameter<T> parameter, int width, int height, style s = style::horizontal)
     {
-        return std::make_shared<slider>(parameter);
+        return std::make_shared<slider>(parameter, width, height, s);
     }
-    slider() : widget()
+    slider(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal) : widget(width, height), style(s)
     {
+        _value.set(text, value, min, max);
         init();
     }
 
-    slider(ofParameter<T> parameter) : widget(), _value(parameter)
+    slider(ofParameter<T> parameter, int width, int height, style s = style::horizontal) : widget(width, height), _value(parameter), _style(s)
     {
         init();
     }
 
     void init()
     {
-        _type = TYPE_OFXWIDGET_SLIDER;
+        _type = TYPE_OFXWIDGETS_SLIDER;
         _value.addListener(this, &slider::onValueChange);
-        _style = style::horizontal;
-    }
 
-    virtual void setup(int width, int height, bool hasOverlay = true)
-    {
-        _children.clear();
-        widget::setup(width, height, hasOverlay);
-
-        _label = ofxWidgets::label::create();
         if (_style == style::horizontal)
         {
-            _label->setup(_contentWidth, height / 2);
-            _label->_position = glm::vec2(0, height / 2);
+            _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 2);
+            _label->_position = glm::vec2(0, _contentHeight / 2);
         }
         else if (_style == style::vertical)
         {
             auto sliderWidth = _contentWidth / 10;
-            _label->setup(sliderWidth * 8.5, sliderWidth);
+            _label = ofxWidgets::label::create(_value.getName(), sliderWidth * 8.5, sliderWidth);
             _label->_position = glm::vec2(sliderWidth * 1.5, (_contentHeight - sliderWidth) / 2);
         }
-        _label->_color = ofColor::white;
+        else if (_style == style::rotary)
+        {
+        }
         add(_label);
-        setNeedsToBeRedrawn(true);
     }
 
     virtual void update()
     {
         if (_needsToBeRedrawn)
         {
-            _label->_text = _value.getName() + ": " + ofToString(_value);
-            _label->setNeedsToBeRedrawn(true);
+            _label->setValue(_value.getName() + ": " + ofToString(_value));
             widget::update();
             begin(false);
             if (_style == style::horizontal)
             {
-                ofSetColor(brigthenColor(_color, -.5));
+                ofSetColor(_secondaryColor);
                 ofDrawRectangle(0, 0, _contentWidth, _contentHeight / 2);
                 ofSetColor(_color);
                 ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _contentWidth), _contentHeight / 2);
             }
             else if (_style == style::vertical)
             {
-                ofSetColor(brigthenColor(_color, -.5));
+                ofSetColor(_secondaryColor);
                 auto sliderWidth = _contentWidth / 10;
                 ofDrawRectangle(0, 0, sliderWidth, _contentHeight);
                 ofSetColor(_color);
@@ -91,7 +84,7 @@ class slider : public ofxWidgets::widget
             {
                 ofPolyline line;
                 line.arc(_contentWidth / 2, _contentHeight / 2, std::min(_contentWidth, _contentHeight), std::min(_contentWidth, _contentHeight), 0, 180);
-                ofSetColor(ofColor::red);
+                ofSetColor(_secondaryColor);
                 ofSetLineWidth(10);
                 line.draw();
             }
@@ -142,6 +135,7 @@ class slider : public ofxWidgets::widget
     {
         _style = s;
         setup(_viewWidth, _viewHeight, _hasOverlay);
+        init();
         setNeedsToBeRedrawn(true);
     }
     void setFontSize(int fontSize)
@@ -153,6 +147,16 @@ class slider : public ofxWidgets::widget
         setNeedsToBeRedrawn(true);
     }
 
+    void setValue(T value)
+    {
+        _value = value;
+    }
+    ofParameter<T> &getValue()
+    {
+        return _value;
+    }
+
+  protected:
     ofParameter<T> _value;
     style _style;
 

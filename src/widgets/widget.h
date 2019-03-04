@@ -29,13 +29,13 @@ class widget
         return brightenedColor;
     }
     typedef std::shared_ptr<widget> pointer;
-    static pointer create()
+    static pointer create(int width, int height)
     {
-        return std::make_shared<widget>();
+        return std::make_shared<widget>(width, height);
     }
-    widget()
+    widget(int width, int height)
     {
-        _type = TYPE_OFXWIDGET_BASE;
+        _type = TYPE_OFXWIDGETS_BASE;
         _pressed.addListener(this, &widget::onPressedChange);
         _pressed.set("pressed", false);
         _hovered.set("hovered", false);
@@ -60,12 +60,13 @@ class widget
         settings.antialiased = true;
         settings.simplifyAmt = 0;
         _ttf.load(settings);
+
+        setup(width, height);
     }
 
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
-        _children.clear();
-        _needsToBeRedrawn = true;
+        setNeedsToBeRedrawn(true);
         _contentWidth = width;
         _contentHeight = height;
         _viewWidth = width;
@@ -85,8 +86,8 @@ class widget
     }
     virtual void setupOverlay()
     {
-        _overlay = ofxWidgets::widget::create();
-        _overlay->setup(_viewWidth, _viewHeight, false);
+        // _overlay = ofxWidgets::widget::create(_viewWidth, _viewHeight);
+        // _overlay->setup(_viewWidth, _viewHeight, false);
     }
 
     void setName(std::string name)
@@ -170,7 +171,7 @@ class widget
             _viewFbo.end();
         }
 
-        setNeedsToBeRedrawn();
+        setNeedsToBeRedrawn(true);
     }
     virtual void updateOverlay()
     {
@@ -481,28 +482,55 @@ class widget
 
     virtual void setTheme(ofJson theme)
     {
-        if (theme.find("widgets") != theme.end())
+        std::string key = TYPE_OFXWIDGETS_BASE;
+        if (theme.find(_type) != theme.end())
         {
-            if (theme["widgets"].find(_type) != theme["widgets"].end())
+            key = _type;
+        }
+
+        if (theme.find(key) != theme.end())
+        {
+            auto property = "color";
+            if (theme[key].find(property) != theme[key].end())
             {
-                int r = theme["widgets"][_type]["color"]["r"];
-                int g = theme["widgets"][_type]["color"]["g"];
-                int b = theme["widgets"][_type]["color"]["b"];
-                int a = theme["widgets"][_type]["color"]["a"];
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
                 _color = ofColor(r, g, b, a);
-                r = theme["widgets"][_type]["backgroundColor"]["r"];
-                g = theme["widgets"][_type]["backgroundColor"]["g"];
-                b = theme["widgets"][_type]["backgroundColor"]["b"];
-                a = theme["widgets"][_type]["backgroundColor"]["a"];
+            }
+            property = "secondaryColor";
+            if (theme[key].find(property) != theme[key].end())
+            {
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
+                _secondaryColor = ofColor(r, g, b, a);
+            }
+            property = "backgroundColor";
+            if (theme[key].find(property) != theme[key].end())
+            {
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
                 _backgroundColor = ofColor(r, g, b, a);
-                for (auto &child : _children)
-                {
-                    bool value = theme["widgets"][_type]["applyToChildren"];
-                    if (value)
-                    {
-                        child->setTheme(theme);
-                    }
-                }
+            }
+        }
+
+        if (theme.find(key) != theme.end() && theme[key].find("children") != theme[key].end())
+        {
+            for (auto &child : _children)
+            {
+                child->setTheme(theme[key]["children"]);
+            }
+        }
+        else
+        {
+            for (auto &child : _children)
+            {
+                child->setTheme(theme);
             }
         }
     }

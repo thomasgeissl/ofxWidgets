@@ -10,26 +10,32 @@ class colorPicker : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<colorPicker> pointer;
-    static pointer create()
+    static pointer create(std::string text, ofColor value, int width, int height)
     {
-        return std::make_shared<colorPicker>();
+        return std::make_shared<colorPicker>(text, value, width, height);
     }
-    static pointer create(ofParameter<ofColor> parameter)
+    static pointer create(ofParameter<ofColor> parameter, int width, int height)
     {
-        return std::make_shared<colorPicker>(parameter);
+        return std::make_shared<colorPicker>(parameter, width, height);
     }
-    colorPicker() : widget(), _label(ofxWidgets::label::create())
+    colorPicker(std::string text, ofColor value, int width, int height) : widget(width, height)
     {
-        _value.set("color", ofColor::black);
+        // _value.set("color", ofColor::black);
+        _value.set(text, value);
         init();
     }
 
-    colorPicker(ofParameter<ofColor> parameter) : widget(), _value(parameter), _label(ofxWidgets::label::create())
+    colorPicker(ofParameter<ofColor> parameter, int width, int height) : widget(width, height), _value(parameter)
     {
         init();
     }
     void init()
     {
+        _type = TYPE_OFXWIDGETS_COLORPICKER;
+        auto mainLayout = ofxWidgets::layout::hBox::create(_contentWidth, _contentHeight);
+        auto leftLayout = ofxWidgets::layout::vBox::create(_contentWidth - _contentHeight, _contentHeight);
+        auto sliderLayout = ofxWidgets::layout::hBox::create(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
+
         _value.addListener(this, &colorPicker::onValueChange);
         _red.set("red", _value.get().r, 0, 255);
         _red.addListener(this, &colorPicker::onComponentChange);
@@ -38,43 +44,23 @@ class colorPicker : public ofxWidgets::widget
         _blue.set("blue", _value.get().b, 0, 255);
         _blue.addListener(this, &colorPicker::onComponentChange);
 
-        _redSlider = ofxWidgets::intSlider::create(_red);
-        _greenSlider = ofxWidgets::intSlider::create(_green);
-        _blueSlider = ofxWidgets::intSlider::create(_blue);
+        _redSlider = ofxWidgets::intSlider::create(_red, sliderLayout->getContentWidth() / 3, sliderLayout->getContentHeight());
+        _greenSlider = ofxWidgets::intSlider::create(_green, _redSlider->getContentWidth(), _redSlider->getContentHeight());
+        _blueSlider = ofxWidgets::intSlider::create(_blue, _redSlider->getContentWidth(), _redSlider->getContentHeight());
 
         _redSlider->_color = ofColor(255, 0, 0);
         _greenSlider->_color = ofColor(0, 255, 0);
         _blueSlider->_color = ofColor(0, 0, 255);
-    }
 
-    virtual void setup(int width, int height, bool hasOverlay = true)
-    {
-        _children.clear();
-        widget::setup(width, height, hasOverlay);
-        auto mainLayout = ofxWidgets::layout::hBox::create();
-        auto leftLayout = ofxWidgets::layout::vBox::create();
-        auto sliderLayout = ofxWidgets::layout::hBox::create();
-        mainLayout->setup(_contentWidth, _contentHeight);
-        leftLayout->setup(_contentWidth - height, _contentHeight);
-        sliderLayout->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         // sliderLayout->_horizontalOffset = sliderLayout->_width/20;
 
-        _redSlider->setup(sliderLayout->getContentWidth() / 3, sliderLayout->getContentHeight());
         sliderLayout->add(_redSlider);
-        _greenSlider->setup(_redSlider->getContentWidth(), _redSlider->getContentHeight());
         sliderLayout->add(_greenSlider);
-        _blueSlider->setup(_redSlider->getContentWidth(), _redSlider->getContentHeight());
         sliderLayout->add(_blueSlider);
-
-        _redSlider->_label->_color = ofColor::white;
-        _greenSlider->_label->_color = ofColor::white;
-        _blueSlider->_label->_color = ofColor::white;
 
         leftLayout->add(sliderLayout);
 
-        _label->setup(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
-        _label->_text = _value.getName();
-        _label->_color = ofColor::white;
+        _label = ofxWidgets::label::create(_value.getName(), leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
         leftLayout->add(_label);
         mainLayout->add(leftLayout);
         add(mainLayout);
@@ -132,6 +118,16 @@ class colorPicker : public ofxWidgets::widget
         _value = ofColor(_red, _green, _blue);
     }
 
+    void setValue(ofColor color)
+    {
+        _value = color;
+    }
+    ofParameter<ofColor> &getValue()
+    {
+        return _color;
+    }
+
+  protected:
     ofParameter<ofColor> _value;
     ofxWidgets::intSlider::pointer _redSlider;
     ofxWidgets::intSlider::pointer _greenSlider;
