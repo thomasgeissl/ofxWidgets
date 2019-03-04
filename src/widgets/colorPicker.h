@@ -33,7 +33,7 @@ class colorPicker : public ofxWidgets::widget
     {
         _type = TYPE_OFXWIDGETS_COLORPICKER;
         auto mainLayout = ofxWidgets::layout::hBox::create(_contentWidth, _contentHeight);
-        auto leftLayout = ofxWidgets::layout::vBox::create(_contentWidth - height, _contentHeight);
+        auto leftLayout = ofxWidgets::layout::vBox::create(_contentWidth - _contentHeight, _contentHeight);
         auto sliderLayout = ofxWidgets::layout::hBox::create(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
 
         _value.addListener(this, &colorPicker::onValueChange);

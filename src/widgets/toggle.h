@@ -31,7 +31,7 @@ class toggle : public ofxWidgets::widget
         _value.addListener(this, &toggle::onValueChange);
 
         _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 2);
-        _label->_position = glm::vec2(0, height / 2);
+        _label->_position = glm::vec2(0, _contentHeight / 2);
         add(_label);
     }
 

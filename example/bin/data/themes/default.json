@@ -10,6 +10,14 @@
         "color": {"r": 255, "g": 69, "b": 0, "a": 255},
         "backgroundColor": {"r": 24, "g": 24, "b": 24, "a": 255}
     },
+    "TYPE_OFXWIDGETS_BUTTON": {
+        "color": {"r": 255, "g": 69, "b": 0, "a": 255},
+        "children": {
+            "TYPE_OFXWIDGETS_LABEL": {
+                "color": {"r": 0, "g": 255, "b": 0, "a": 255}
+            }
+        }
+    },
     "TYPE_OFXWIDGETS_LABEL": {
         "color": {"r": 200, "g": 200, "b": 200, "a": 255},
         "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 0}

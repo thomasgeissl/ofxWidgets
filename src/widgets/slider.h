@@ -16,13 +16,13 @@ class slider : public ofxWidgets::widget
         rotary
     };
     typedef std::shared_ptr<slider> pointer;
-    static pointer create(std::string text, T value, T min, T max, int width, int height)
+    static pointer create(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal)
     {
-        return std::make_shared<slider>(text, value, min, max, width, height);
+        return std::make_shared<slider>(text, value, min, max, width, height, s);
     }
-    static pointer create(ofParameter<T> parameter)
+    static pointer create(ofParameter<T> parameter, int width, int height, style s = style::horizontal)
     {
-        return std::make_shared<slider>(parameter);
+        return std::make_shared<slider>(parameter, width, height, s);
     }
     slider(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal) : widget(width, height), style(s)
     {
@@ -39,7 +39,6 @@ class slider : public ofxWidgets::widget
     {
         _type = TYPE_OFXWIDGETS_SLIDER;
         _value.addListener(this, &slider::onValueChange);
-        _style = style::horizontal;
 
         if (_style == style::horizontal)
         {
@@ -63,7 +62,7 @@ class slider : public ofxWidgets::widget
     {
         if (_needsToBeRedrawn)
         {
-            _label->_text = _value.getName() + ": " + ofToString(_value);
+            _label->setText(_value.getName() + ": " + ofToString(_value));
             _label->setNeedsToBeRedrawn(true);
             widget::update();
             begin(false);
@@ -138,6 +137,7 @@ class slider : public ofxWidgets::widget
     {
         _style = s;
         setup(_viewWidth, _viewHeight, _hasOverlay);
+        init();
         setNeedsToBeRedrawn(true);
     }
     void setFontSize(int fontSize)

@@ -7,11 +7,15 @@ class shape : public ofxWidgets::widget
 {
   public:
     typedef std::shared_ptr<shape> pointer;
-    static pointer create()
+    static pointer create(ofxWidgets::widget::pointer w)
     {
-        return std::make_shared<shape>();
+        return create(w->getContentWidth(), w->getContentHeight());
     }
-    shape()
+    static pointer create(int width, int height)
+    {
+        return std::make_shared<shape>(width, height);
+    }
+    shape(int width, int height) : widget(width, height)
     {
         _fillColor = ofColor::purple;
         _boost.set("boost", false);
@@ -21,7 +25,7 @@ class shape : public ofxWidgets::widget
     void update()
     {
         widget::update();
-        begin(false);
+        begin();
         ofSetColor(_fillColor);
         if (_boost)
         {

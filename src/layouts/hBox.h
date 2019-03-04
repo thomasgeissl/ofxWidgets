@@ -11,6 +11,16 @@ class hBox : public ofxWidgets::layout::box
 {
   public:
     typedef std::shared_ptr<hBox> pointer;
+    static pointer createAndAddTo(ofxWidgets::widget::pointer w)
+    {
+        auto layout = create(w->getViewWidth(), w->getViewHeight());
+        w->add(layout);
+        return layout;
+    }
+    static pointer create(ofxWidgets::widget::pointer w)
+    {
+        return create(w->getViewWidth(), w->getViewHeight());
+    }
     static pointer create(int width, int height)
     {
         return std::make_shared<hBox>(width, height);

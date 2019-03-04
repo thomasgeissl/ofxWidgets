@@ -17,7 +17,7 @@ class panel : public ofxWidgets::widget
     {
         return std::make_shared<panel>(width, height);
     }
-    static pointer create(ofParameterGroup parameters, width, height)
+    static pointer create(ofParameterGroup parameters, int width, int height)
     {
         return std::make_shared<panel>(parameters, width, height);
     }

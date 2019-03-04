@@ -86,8 +86,8 @@ class widget
     }
     virtual void setupOverlay()
     {
-        _overlay = ofxWidgets::widget::create();
-        _overlay->setup(_viewWidth, _viewHeight, false);
+        // _overlay = ofxWidgets::widget::create(_viewWidth, _viewHeight);
+        // _overlay->setup(_viewWidth, _viewHeight, false);
     }
 
     void setName(std::string name)
