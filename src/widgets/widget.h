@@ -66,7 +66,7 @@ class widget
 
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
-        _needsToBeRedrawn = true;
+        setNeedsToBeRedrawn(true);
         _contentWidth = width;
         _contentHeight = height;
         _viewWidth = width;
@@ -171,7 +171,7 @@ class widget
             _viewFbo.end();
         }
 
-        setNeedsToBeRedrawn();
+        setNeedsToBeRedrawn(true);
     }
     virtual void updateOverlay()
     {
@@ -490,20 +490,31 @@ class widget
 
         if (theme.find(key) != theme.end())
         {
-            if (theme[key].find("color") != theme[key].end())
+            auto property = "color";
+            if (theme[key].find(property) != theme[key].end())
             {
-                int r = theme[key]["color"]["r"];
-                int g = theme[key]["color"]["g"];
-                int b = theme[key]["color"]["b"];
-                int a = theme[key]["color"]["a"];
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
                 _color = ofColor(r, g, b, a);
             }
-            if (theme[key].find("backgroundColor") != theme[key].end())
+            property = "secondaryColor";
+            if (theme[key].find(property) != theme[key].end())
             {
-                int r = theme[key]["backgroundColor"]["r"];
-                int g = theme[key]["backgroundColor"]["g"];
-                int b = theme[key]["backgroundColor"]["b"];
-                int a = theme[key]["backgroundColor"]["a"];
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
+                _secondaryColor = ofColor(r, g, b, a);
+            }
+            property = "backgroundColor";
+            if (theme[key].find(property) != theme[key].end())
+            {
+                int r = theme[key][property]["r"];
+                int g = theme[key][property]["g"];
+                int b = theme[key][property]["b"];
+                int a = theme[key][property]["a"];
                 _backgroundColor = ofColor(r, g, b, a);
             }
         }

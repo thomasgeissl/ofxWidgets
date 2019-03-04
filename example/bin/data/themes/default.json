@@ -1,32 +1,47 @@
 {
     "TYPE_OFXWIDGETS_BASE": {
-        "color": {"r": 255, "g": 69, "b": 0, "a": 255},
+        "color": {"r": 255, "g": 127, "b": 0, "a": 255},
+        "secondaryColor": {"r": 64, "g": 64, "b": 64, "a": 255},
         "backgroundColor": {"r": 32, "g": 32, "b": 32, "a": 255}
     },
     "TYPE_OFXWIDGETS_LAYOUT": {
         "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 0}
     },
     "TYPE_OFXWIDGETS_GUI": {
-        "color": {"r": 255, "g": 69, "b": 0, "a": 255},
-        "backgroundColor": {"r": 24, "g": 24, "b": 24, "a": 255}
+        "color": {"r": 130, "g": 47, "b": 53, "a": 255},
+        "backgroundColor": {"r": 123, "g": 59, "b": 13, "a": 255}
     },
     "TYPE_OFXWIDGETS_BUTTON": {
-        "color": {"r": 255, "g": 69, "b": 0, "a": 255},
+        "color": {"r": 255, "g": 127, "b": 0, "a": 255},
+        "secondaryColor": {"r": 64, "g": 64, "b": 64, "a": 255},
         "children": {
             "TYPE_OFXWIDGETS_LABEL": {
-                "color": {"r": 0, "g": 255, "b": 0, "a": 255}
+                "color": {"r": 255, "g": 127, "b": 0, "a": 255}
             }
         }
     },
+    "TYPE_OFXWIDGETS_TOGGLE": {
+        "color": {"r": 255, "g": 127, "b": 0, "a": 255},
+        "secondaryColor": {"r": 64, "g": 64, "b": 64, "a": 255}
+    },
     "TYPE_OFXWIDGETS_LABEL": {
-        "color": {"r": 200, "g": 200, "b": 200, "a": 255},
+        "color": {"r": 128, "g": 128, "b": 128, "a": 255},
         "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 0}
     },
     "TYPE_OFXWIDGETS_COLORPICKER": {
         "backgroundColor": {"r": 32, "g": 32, "b": 32, "a": 255},
         "children": {
+            "TYPE_OFXWIDGETS_SLIDER": {
+                "secondaryColor": {"r": 64, "g": 64, "b": 64, "a": 255},
+                "children": {
+                    "TYPE_OFXWIDGETS_LABEL": {
+                        "color": {"r": 255, "g": 0, "b": 0, "a": 255},
+                        "backgroundColor": {"r": 0, "g": 0, "b": 0, "a": 255}
+                    }
+                }
+            },
             "TYPE_OFXWIDGETS_LABEL": {
-                "color": {"r": 200, "g": 200, "b": 200, "a": 255}
+                "color": {"r": 255, "g": 0, "b": 0, "a": 255}
             }
         }
     }

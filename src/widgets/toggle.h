@@ -16,12 +16,12 @@ class toggle : public ofxWidgets::widget
     {
         return std::make_shared<toggle>(parameter, width, height);
     }
-    toggle(std::string text, bool value, int width, int height) : widget(width, height), _checkedText("on"), _unCheckedText("off")
+    toggle(std::string text, bool value, int width, int height) : widget(width, height)
     {
         _value.set(text, value);
         init();
     }
-    toggle(ofParameter<bool> parameter, int width, int height) : widget(width, height), _value(parameter), _checkedText("on"), _unCheckedText("off")
+    toggle(ofParameter<bool> parameter, int width, int height) : widget(width, height), _value(parameter)
     {
         init();
     }
@@ -29,6 +29,10 @@ class toggle : public ofxWidgets::widget
     {
         _type = TYPE_OFXWIDGETS_TOGGLE;
         _value.addListener(this, &toggle::onValueChange);
+        _checkedText.addListener(this, &toggle::onCheckedTextChange);
+        _checkedText.set("checkedText", "on");
+        _unCheckedText.addListener(this, &toggle::onUnCheckedTextChange);
+        _unCheckedText.set("uncheckedText", "off");
 
         _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 2);
         _label->_position = glm::vec2(0, _contentHeight / 2);
@@ -41,14 +45,15 @@ class toggle : public ofxWidgets::widget
         {
             if (_value)
             {
-                _label->_text = _value.getName() + ": " + _checkedText;
+                _label->setValue(_value.getName() + ": " + _checkedText.get());
             }
             else
             {
-                _label->_text = _value.getName() + ": " + _unCheckedText;
+                _label->setValue(_value.getName() + ": " + _unCheckedText.get());
             }
-            _label->setNeedsToBeRedrawn(true);
+            // update and draw all children
             widget::update();
+            // draw a new layer onto the the fbo, but dont clear it
             begin(false);
             float offset = _contentHeight * 0.05;
             float height = _contentHeight - 2 * offset;
@@ -63,14 +68,14 @@ class toggle : public ofxWidgets::widget
             }
             else
             {
-                ofSetColor(brigthenColor(_color, -.5));
+                ofSetColor(_secondaryColor);
                 ofDrawRectangle(x, y, width, height);
             }
             ofNoFill();
             ofSetLineWidth(1);
             ofDrawRectangle(x, y, _contentWidth - 2 * offset, height);
             ofFill();
-            _label->draw();
+            // _label->draw();
             end();
         }
     }
@@ -83,11 +88,34 @@ class toggle : public ofxWidgets::widget
     {
         setNeedsToBeRedrawn(true);
     }
+    void onCheckedTextChange(std::string &value)
+    {
+        setNeedsToBeRedrawn(true);
+    }
+    void onUnCheckedTextChange(std::string &value)
+    {
+        setNeedsToBeRedrawn(true);
+    }
 
+    void setValue(bool value)
+    {
+        _value = value;
+    }
+    ofParameter<bool> &getValue()
+    {
+        return _value;
+    }
+    void setCheckedText(std::string value){
+        _checkedText = value;
+    }
+    void setUnCheckedText(std::string value){
+        _unCheckedText = value;
+    }
+
+  protected:
     ofParameter<bool> _value;
+    ofParameter<std::string> _checkedText;
+    ofParameter<std::string> _unCheckedText;
     ofxWidgets::label::pointer _label;
-
-    std::string _checkedText;
-    std::string _unCheckedText;
 };
 }; // namespace ofxWidgets

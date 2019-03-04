@@ -18,18 +18,19 @@ class button : public ofxWidgets::widget
     }
     button(std::string text, int width, int height) : widget(width, height)
     {
-        _trigger.setName("text");
+        _value.setName("text");
         init();
     }
-    button(ofParameter<void> parameter, int width, int height) : widget(width, height), _trigger(parameter)
+    button(ofParameter<void> parameter, int width, int height) : widget(width, height), _value(parameter)
     {
         init();
     }
-    void init(){
+    void init()
+    {
         _type = TYPE_OFXWIDGETS_BUTTON;
-        _color = ofColor::lightGrey;
-        _label = ofxWidgets::label::create(_trigger.getName(), _contentWidth, _contentHeight);
+        _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight);
         _label->setAlignment(ofxWidgets::widget::alignment::center);
+        add(_label);
     }
     virtual void setup(int width, int height, bool hasOverlay = true)
     {
@@ -41,8 +42,9 @@ class button : public ofxWidgets::widget
     {
         if (_needsToBeRedrawn)
         {
-            // widget::update();
-            _label->update();
+            // update and draw all children
+            widget::update();
+            // clear fbo and draw onto it
             begin();
             if (_pressed)
             {
@@ -50,7 +52,7 @@ class button : public ofxWidgets::widget
             }
             else
             {
-                ofSetColor(brigthenColor(_color, -0.5));
+                ofSetColor(_secondaryColor);
             }
             ofDrawRectangle(0, 0, _contentWidth, _contentHeight);
             _label->draw();
@@ -58,7 +60,7 @@ class button : public ofxWidgets::widget
             if (_hovered)
             {
                 ofNoFill();
-                ofSetColor(brigthenColor(_color, -0.25));
+                ofSetColor(_color);
                 ofSetLineWidth(1);
                 ofDrawRectangle(0, 0, _contentWidth, _contentHeight);
             }
@@ -68,10 +70,20 @@ class button : public ofxWidgets::widget
     virtual void mousePressed(int x, int y, int button)
     {
         widget::mousePressed(x, y, button);
-        _trigger.trigger();
+        _value.trigger();
     }
 
-    ofParameter<void> _trigger;
+    void trigger(){
+        _value.trigger();
+    }
+    void setValue(){
+        _value.trigger();
+    }
+    ofParameter<void> & getValue(){
+        return _value;
+    }
+  protected:
+    ofParameter<void> _value;
     ofxWidgets::label::pointer _label;
 };
 }; // namespace ofxWidgets

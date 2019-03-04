@@ -54,7 +54,6 @@ class slider : public ofxWidgets::widget
         else if (_style == style::rotary)
         {
         }
-        _label->_color = ofColor::white;
         add(_label);
     }
 
@@ -62,20 +61,19 @@ class slider : public ofxWidgets::widget
     {
         if (_needsToBeRedrawn)
         {
-            _label->setText(_value.getName() + ": " + ofToString(_value));
-            _label->setNeedsToBeRedrawn(true);
+            _label->setValue(_value.getName() + ": " + ofToString(_value));
             widget::update();
             begin(false);
             if (_style == style::horizontal)
             {
-                ofSetColor(brigthenColor(_color, -.5));
+                ofSetColor(_secondaryColor);
                 ofDrawRectangle(0, 0, _contentWidth, _contentHeight / 2);
                 ofSetColor(_color);
                 ofDrawRectangle(0, 0, ofMap(_value, _value.getMin(), _value.getMax(), 0, _contentWidth), _contentHeight / 2);
             }
             else if (_style == style::vertical)
             {
-                ofSetColor(brigthenColor(_color, -.5));
+                ofSetColor(_secondaryColor);
                 auto sliderWidth = _contentWidth / 10;
                 ofDrawRectangle(0, 0, sliderWidth, _contentHeight);
                 ofSetColor(_color);
@@ -86,7 +84,7 @@ class slider : public ofxWidgets::widget
             {
                 ofPolyline line;
                 line.arc(_contentWidth / 2, _contentHeight / 2, std::min(_contentWidth, _contentHeight), std::min(_contentWidth, _contentHeight), 0, 180);
-                ofSetColor(ofColor::red);
+                ofSetColor(_secondaryColor);
                 ofSetLineWidth(10);
                 line.draw();
             }
@@ -149,6 +147,16 @@ class slider : public ofxWidgets::widget
         setNeedsToBeRedrawn(true);
     }
 
+    void setValue(T value)
+    {
+        _value = value;
+    }
+    ofParameter<T> &getValue()
+    {
+        return _value;
+    }
+
+  protected:
     ofParameter<T> _value;
     style _style;
 

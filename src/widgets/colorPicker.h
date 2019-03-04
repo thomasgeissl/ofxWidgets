@@ -118,6 +118,16 @@ class colorPicker : public ofxWidgets::widget
         _value = ofColor(_red, _green, _blue);
     }
 
+    void setValue(ofColor color)
+    {
+        _value = color;
+    }
+    ofParameter<ofColor> &getValue()
+    {
+        return _color;
+    }
+
+  protected:
     ofParameter<ofColor> _value;
     ofxWidgets::intSlider::pointer _redSlider;
     ofxWidgets::intSlider::pointer _greenSlider;
