@@ -53,6 +53,9 @@ class slider : public ofxWidgets::widget
         }
         else if (_style == style::rotary)
         {
+            _label = ofxWidgets::label::create(_value.getName(), _contentWidth, _contentHeight / 4);
+            _label->_position = glm::vec2(0, _contentHeight / 4 * 3);
+            _label->setAlignment(ofxWidgets::widget::alignment::center);
         }
         add(_label);
     }
@@ -82,10 +85,21 @@ class slider : public ofxWidgets::widget
             }
             else if (_style == style::rotary)
             {
-                ofPolyline line;
-                line.arc(_contentWidth / 2, _contentHeight / 2, std::min(_contentWidth, _contentHeight), std::min(_contentWidth, _contentHeight), 0, 180);
                 ofSetColor(_secondaryColor);
-                ofSetLineWidth(10);
+                glm::vec2 center(_contentWidth / 2, _contentHeight / 4 * 3 / 2);
+                auto radius = _contentHeight / 4 * 3 / 2;
+                ofDrawCircle(center.x, center.y, radius);
+
+                ofPolyline line;
+                float mapped = ofMap(_value, _value.getMin(), _value.getMax(), 0 + 90, 359.99 + 90);
+                if (mapped > 360)
+                {
+                    mapped -= 360;
+                }
+
+                line.arc(center.x, center.y, radius * 0.9, radius * 0.9, 90, mapped);
+                ofSetLineWidth(5);
+                ofSetColor(_color);
                 line.draw();
             }
             end();
@@ -107,7 +121,19 @@ class slider : public ofxWidgets::widget
             }
             else if (_style == style::rotary)
             {
-                // TODO
+                if (y < _contentHeight / 4 * 3)
+                {
+                    glm::vec2 a(x, y);
+                    glm::vec2 b(_contentWidth/2, _contentHeight/4*3/2 + 1);
+                    glm::vec2 origin(_contentWidth/2, _contentHeight/4*3/2);
+                    glm::vec2 da = glm::normalize(a - origin);
+                    glm::vec2 db = glm::normalize(b - origin);
+                    auto angle = glm::acos(glm::dot(da, db)) * 180 / 3.14;//glm::pi;
+                    if(x > _contentWidth/2){
+                        angle = 360 - angle;
+                    }
+                    _value = ofMap(angle, 0, 359.99, _value.getMin(), _value.getMax());
+                }
             }
         }
     }
@@ -126,7 +152,10 @@ class slider : public ofxWidgets::widget
             }
             else if (_style == style::rotary)
             {
-                // TODO
+                if (y < _contentHeight / 4 * 3)
+                {
+                    _value = ofMap(_contentHeight / 4 * 3 - y, 0, _contentHeight / 4 * 3, _value.getMin(), _value.getMax(), true);
+                }
             }
         }
     }
