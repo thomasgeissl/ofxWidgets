@@ -32,12 +32,20 @@ class vBox : public ofxWidgets::layout::box
     }
     virtual void add(ofxWidgets::widget::pointer w)
     {
+        auto y = 0;
+        auto x = 0;
         if (_children.size() > 0)
         {
-            auto pos = _children.back()->_position;
-            auto height = _children.back()->_viewHeight + _verticalOffset;
-            w->_position = pos + glm::vec2(0, height);
+            y += _verticalOffset;
+            y += _children.back()->_position.y;
+            y += _children.back()->_viewHeight;
+            if (w->getContentWidth() < _contentWidth)
+            {
+                x = (_contentWidth - w->getContentWidth()) / 2;
+            }
         }
+        w->_position.x = x;
+        w->_position.y = y;
         widget::add(w);
     }
     void offsetChanged(float &value)
@@ -45,6 +53,12 @@ class vBox : public ofxWidgets::layout::box
         recalculatePositions();
     }
 
+    void setOffset(float value)
+    {
+        _verticalOffset = value;
+    }
+
+  protected:
     ofParameter<float> _verticalOffset;
 };
 }; // namespace layout

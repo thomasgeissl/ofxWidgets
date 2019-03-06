@@ -46,6 +46,12 @@ class hBox : public ofxWidgets::layout::box
         recalculatePositions();
     }
 
+    void setOffset(float value)
+    {
+        _horizontalOffset = value;
+    }
+
+  protected:
     ofParameter<float> _horizontalOffset;
 };
 }; // namespace layout
