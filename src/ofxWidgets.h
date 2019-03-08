@@ -10,6 +10,7 @@
 #include "./widgets/labeledSlider.h"
 #include "./widgets/button.h"
 #include "./widgets/toggle.h"
+#include "./widgets/labeledToggle.h"
 #include "./widgets/panel.h"
 // #include "./widgets/dropDown.h"
 // #include "./widgets/list.h"

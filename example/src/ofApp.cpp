@@ -63,7 +63,8 @@ void ofApp::setup()
 
 
     sideBarLayout->add(ofxWidgets::label::create("Button, toggle, colorpicker", sideBarLayout->getViewWidth(), 35));
-    sideBarLayout->add(ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 40));
+    sideBarLayout->add(ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 20));
+    sideBarLayout->add(ofxWidgets::labeledToggle::create(ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 20), ofxWidgets::labeledToggle::position::BOTTOM, sideBarLayout->getViewWidth(), 40));
     sideBarLayout->add(ofxWidgets::button::create(_trigger, sideBarLayout->getViewWidth(), 20));
     sideBarLayout->add(ofxWidgets::colorPicker::create(_upperShape->_fillColor, sideBarLayout->getViewWidth(), 40));
 
