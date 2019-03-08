@@ -35,9 +35,11 @@ class labeledSlider : public ofxWidgets::widget
         }
         else if (p == position::LEFT)
         {
+					auto offset = 10;
             labelWidth = _contentWidth - s->getViewWidth();
-            _label = ofxWidgets::label::create("", labelWidth, labelHeight);
-            _slider->_position.x = _label->getViewWidth();
+            _label = ofxWidgets::label::create("", labelWidth - offset, labelHeight);
+						_label->setAlignment(ofxWidgets::widget::alignment::right);
+            _slider->_position.x = _label->getViewWidth() + offset;
         }
         else if (p == position::BOTTOM)
         {
@@ -47,9 +49,10 @@ class labeledSlider : public ofxWidgets::widget
         }
         else if (p == position::RIGHT)
         {
+					auto offset = 10;
             labelWidth = _contentWidth - s->getViewWidth();
-            _label = ofxWidgets::label::create("", labelWidth, labelHeight);
-            _label->_position.x = _slider->getViewWidth();
+            _label = ofxWidgets::label::create("", labelWidth - offset, labelHeight);
+            _label->_position.x = _slider->getViewWidth() + offset;
         }
         add(_slider);
         add(_label);
@@ -60,11 +63,17 @@ class labeledSlider : public ofxWidgets::widget
     {
         _type = TYPE_OFXWIDGETS_SLIDER;
         _slider->getValue().addListener(this, &labeledSlider::onValueChange);
+				auto text = _slider->getValue().getName();
+				text += ": ";
+				text += ofToString(_slider->getValue());
+        _label->setValue(text);
     }
 
     void onValueChange(T &value)
     {
         auto text = _slider->getValue().getName();
+				text += ": ";
+				text += ofToString(_slider->getValue());
         _label->setValue(text);
     }
 

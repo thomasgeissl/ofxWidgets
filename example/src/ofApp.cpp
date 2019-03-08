@@ -29,7 +29,7 @@ void ofApp::setup()
 
 
     // ## content
-    auto content = ofxWidgets::widget::create(mainLayout->getViewWidth()/5*4, mainLayout->getViewHeight());
+    auto content = ofxWidgets::widget::create(mainLayout->getViewWidth()/3*2, mainLayout->getViewHeight());
     auto contentLayout = ofxWidgets::layout::vBox::createAndAddTo(content);
     contentLayout->setName("contentLayout");
 
@@ -39,22 +39,42 @@ void ofApp::setup()
 
 
     // ## sidebar
-    auto sideBar = ofxWidgets::widget::create(_gui.getViewWidth() /5, _gui.getViewHeight());
+    auto sideBar = ofxWidgets::widget::create(_gui.getViewWidth() /3, _gui.getViewHeight());
     auto sideBarLayout = ofxWidgets::layout::vBox::createAndAddTo(sideBar);
-    sideBarLayout->_verticalOffset = 10;
+    sideBarLayout->setOffset(10);
     sideBarLayout->add(ofxWidgets::label::create("ofxWidgets Demo", sideBarLayout->getViewWidth(), 50));
-    sideBarLayout->add(ofxWidgets::label::create("Settings", sideBarLayout->getViewWidth(), 40));
-    sideBarLayout->add(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 40));
-    sideBarLayout->add(ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80, ofxWidgets::floatSlider::style::vertical));
-    sideBarLayout->add(ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80, ofxWidgets::floatSlider::style::rotary));
+
+
+    sideBarLayout->add(ofxWidgets::label::create("Sliders", sideBarLayout->getViewWidth(), 35));
+    sideBarLayout->add(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 20));
+		auto verticalSliderWidget = ofxWidgets::widget::create(sideBarLayout->getViewWidth(), 60);
+		auto verticalSliderWidgetLayout = ofxWidgets::layout::hBox::createAndAddTo(verticalSliderWidget);
+		verticalSliderWidgetLayout->setOffset(5);
+		for(auto i = 0; i < 4; i++){
+    	verticalSliderWidgetLayout->add(ofxWidgets::floatSlider::create(ofToString(i), 0, 0, 1, 20, verticalSliderWidgetLayout->getViewHeight(), ofxWidgets::floatSlider::style::vertical));
+		}
+    // sideBarLayout->add(ofxWidgets::floatSlider::create(_floatValue, sideBarLayout->getViewWidth(), 80, ofxWidgets::floatSlider::style::rotary));
+    verticalSliderWidgetLayout->add(ofxWidgets::floatSlider::create(_floatValue, verticalSliderWidgetLayout->getRemainingWidth(), verticalSliderWidgetLayout->getViewHeight(), ofxWidgets::floatSlider::style::rotary));
+		sideBarLayout->add(verticalSliderWidget);
+		sideBarLayout->add(ofxWidgets::labeledIntSlider::create(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 10), ofxWidgets::labeledIntSlider::position::TOP, sideBarLayout->getViewWidth(), 40));
+		sideBarLayout->add(ofxWidgets::labeledIntSlider::create(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth()/2, 20, ofxWidgets::intSlider::style::vertical), ofxWidgets::labeledIntSlider::position::RIGHT, sideBarLayout->getViewWidth(), 20));
+		sideBarLayout->add(ofxWidgets::labeledIntSlider::create(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth()/2, 20, ofxWidgets::intSlider::style::vertical), ofxWidgets::labeledIntSlider::position::LEFT, sideBarLayout->getViewWidth(), 20));
+		sideBarLayout->add(ofxWidgets::labeledIntSlider::create(ofxWidgets::intSlider::create(_intValue, sideBarLayout->getViewWidth(), 10), ofxWidgets::labeledIntSlider::position::BOTTOM, sideBarLayout->getViewWidth(), 40));
+
+
+    sideBarLayout->add(ofxWidgets::label::create("Button, toggle, colorpicker", sideBarLayout->getViewWidth(), 35));
     sideBarLayout->add(ofxWidgets::toggle::create(_upperShape->_boost, sideBarLayout->getViewWidth(), 40));
     sideBarLayout->add(ofxWidgets::button::create(_trigger, sideBarLayout->getViewWidth(), 20));
     sideBarLayout->add(ofxWidgets::colorPicker::create(_upperShape->_fillColor, sideBarLayout->getViewWidth(), 40));
-    sideBarLayout->add(ofxWidgets::label::create("Scrollable", sideBarLayout->getViewWidth(), 40));
+
+
+    sideBarLayout->add(ofxWidgets::label::create("Scrollable", sideBarLayout->getViewWidth(), 35));
     auto scrollableWidget = ofxWidgets::widget::create(sideBarLayout->getViewWidth(), 80);
     auto scrollableWidgetLayout = ofxWidgets::layout::vBox::createAndAddTo(scrollableWidget);
-    scrollableWidgetLayout->add(ofxWidgets::intSlider::create(_intValue, scrollableWidgetLayout->getViewWidth(), 60));
-    scrollableWidgetLayout->add(ofxWidgets::colorPicker::create(_upperShape->_fillColor, scrollableWidgetLayout->getViewWidth(), 40));
+		scrollableWidgetLayout->setOffset(10);
+    scrollableWidgetLayout->add(ofxWidgets::intSlider::create(_intValue, scrollableWidgetLayout->getViewWidth(), 40));
+    scrollableWidgetLayout->add(ofxWidgets::intSlider::create(_intValue, scrollableWidgetLayout->getViewWidth(), 40));
+    scrollableWidgetLayout->add(ofxWidgets::colorPicker::create(_upperShape->_fillColor, scrollableWidgetLayout->getViewWidth(), 20));
     scrollableWidgetLayout->_scrollPosition.y = 20;
     sideBarLayout->add(scrollableWidget);
 

@@ -33,12 +33,20 @@ class hBox : public ofxWidgets::layout::box
 
     virtual void add(ofxWidgets::widget::pointer w)
     {
+				auto y = 0;
+        auto x = 0;
         if (_children.size() > 0)
         {
-            auto pos = _children.back()->_position;
-            auto width = _children.back()->_viewWidth;
-            w->_position = pos + glm::vec2(width, 0);
+            x += _horizontalOffset;
+            x += _children.back()->_position.x;
+            x += _children.back()->_viewWidth;
+            if (w->getContentHeight() < _contentHeight)
+            {
+                x = (_contentHeight - w->getContentHeight()) / 2;
+            }
         }
+        w->_position.x = x;
+        w->_position.y = y;
         widget::add(w);
     }
     void offsetChanged(float &value)
@@ -50,6 +58,12 @@ class hBox : public ofxWidgets::layout::box
     {
         _horizontalOffset = value;
     }
+		int getRemainingWidth(){
+			if(_children.size() > 0){
+				return _contentWidth - _children.back()->_position.x - _children.back()->getContentWidth() - _horizontalOffset;
+			}
+			return _contentWidth;
+		}
 
   protected:
     ofParameter<float> _horizontalOffset;

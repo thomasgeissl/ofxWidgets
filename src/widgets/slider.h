@@ -24,7 +24,7 @@ class slider : public ofxWidgets::widget
     {
         return std::make_shared<slider>(parameter, width, height, s);
     }
-    slider(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal) : widget(width, height), style(s)
+    slider(std::string text, T value, T min, T max, int width, int height, style s = style::horizontal) : widget(width, height), _style(s)
     {
         _value.set(text, value, min, max);
         init();
@@ -141,9 +141,9 @@ class slider : public ofxWidgets::widget
             }
             else if (_style == style::rotary)
             {
-                if (y < _contentHeight / 4 * 3)
+                if (y < _contentHeight)
                 {
-                    _value = ofMap(_contentHeight / 4 * 3 - y, 0, _contentHeight / 4 * 3, _value.getMin(), _value.getMax(), true);
+                    _value = ofMap(_contentHeight - y, 0, _contentHeight, _value.getMin(), _value.getMax(), true);
                 }
             }
         }

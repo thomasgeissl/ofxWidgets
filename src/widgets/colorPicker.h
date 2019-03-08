@@ -35,6 +35,7 @@ class colorPicker : public ofxWidgets::widget
         auto mainLayout = ofxWidgets::layout::hBox::create(_contentWidth, _contentHeight);
         auto leftLayout = ofxWidgets::layout::vBox::create(_contentWidth - _contentHeight, _contentHeight);
         auto sliderLayout = ofxWidgets::layout::hBox::create(leftLayout->getContentWidth(), leftLayout->getContentHeight() / 2);
+				sliderLayout->setOffset(5);
 
         _value.addListener(this, &colorPicker::onValueChange);
         _red.set("red", _value.get().r, 0, 255);
@@ -44,7 +45,7 @@ class colorPicker : public ofxWidgets::widget
         _blue.set("blue", _value.get().b, 0, 255);
         _blue.addListener(this, &colorPicker::onComponentChange);
 
-        _redSlider = ofxWidgets::intSlider::create(_red, sliderLayout->getContentWidth() / 3, sliderLayout->getContentHeight());
+        _redSlider = ofxWidgets::intSlider::create(_red, (sliderLayout->getContentWidth() -10) / 3, sliderLayout->getContentHeight());
         _greenSlider = ofxWidgets::intSlider::create(_green, _redSlider->getContentWidth(), _redSlider->getContentHeight());
         _blueSlider = ofxWidgets::intSlider::create(_blue, _redSlider->getContentWidth(), _redSlider->getContentHeight());
 
