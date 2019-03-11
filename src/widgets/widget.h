@@ -353,6 +353,10 @@ class widget
         return _viewHeight;
     }
 
+    void setPosition(float x, float y){
+        _position.x = x;
+        _position.y = y;
+    }
     void setScrollPosition(float x, float y)
     {
         if (x >= 0 && x <= _contentHeight - _viewHeight)

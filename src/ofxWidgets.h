@@ -4,6 +4,7 @@
 #include "./defines.h"
 #include "./layouts/hBox.h"
 #include "./layouts/vBox.h"
+#include "./layouts/tab.h"
 #include "./widgets/widget.h"
 #include "./widgets/label.h"
 #include "./widgets/slider.h"
